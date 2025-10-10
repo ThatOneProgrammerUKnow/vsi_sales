@@ -1,0 +1,44 @@
+/* 
+Imports are used to keep the stylesheet more clean and eady to navigate. In a production enviroment, they may be concacted into
+one stylesheet. 
+ */
+@import "header.css";
+@import "panel-data.css";
+@import "tables.css";
+@import "modals.css";
+
+@font-face{
+    font-family: "Sansation";
+    src: url('../fonts/sansation/Sansation-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    font-family: "Sansation";
+    background-color: #012A4A;
+    color: #013A63;
+}
+
+/* 
+An island is used for all the data. it "floates" on the background to create a modern effect 
+*/
+.panel{
+    margin: 20px 30px;
+    padding: 10px;
+    background-color: #ececec;
+    border-radius: 15px;
+    box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.5);
+}
+.panel h2{
+    margin-left: 20px;
+}
+
+
+
+
+
+
+

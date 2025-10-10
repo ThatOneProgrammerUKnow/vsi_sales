@@ -1,0 +1,46 @@
+
+.table-container{ /* Used to center the table */
+    display:flex;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+}
+
+table{
+    border-collapse: separate;
+    border: 1px solid #012A4A;
+    margin: 20px 30px;
+    background-color: #ececec;
+    border-radius: 15px;
+    box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    border-spacing: 0;
+}
+table tr > *{
+    padding: 15px;
+}
+table th{
+    border-bottom: 1px solid #012A4A;
+    background-color: #89C2D9;
+}
+table tr:nth-child(even){
+    background-color: #DEE2E6;
+}
+
+/* 
+view-more-btn is used as an "extension" of the table. Only the most frequent information is displayed in the table itself. 
+When you click on this button, there should open up a modal that shows all the attributes form this object.
+*/
+.view-more-btn{
+    padding: 5px;
+    background-color: white;
+    border-radius: 10px;
+    color: inherit;
+    border: 2px solid #012A4A;
+    box-shadow: 1px 1px 1px 1px #012a4a2b;
+}
+.view-more-btn:hover{
+    cursor: pointer;
+    background-color: #E9ECEF;
+}
+

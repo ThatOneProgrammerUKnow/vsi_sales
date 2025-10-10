@@ -1,0 +1,120 @@
+{% extends 'dbapp/base.html' %}
+
+{% block title %}VSI Solutions | Goods Table{% endblock %}
+
+{% block content %}
+<div class="table-container">
+    <table>
+        <tr>
+            <th>Serial number</th>
+            <th>GRN Number</th>
+            <th>Model Number</th>
+            <th>Customer</th>
+            <th>Urgency</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Days<br>waiting</th>
+            <th>All Information</th>     
+        </tr>
+        <tr>
+            <td>1062242638</td>
+            <td>82651</td>
+            <td>SACFW700C58P5T4DB20</td>
+            <td>SNR ELECTRICAL</td>
+            <td>Not urgent</td>
+            <td>VSD</td>
+            <td>Awaiting Request</td>
+            <td>3</td>
+            <td><button id="modal-btn" class="view-more-btn">View More</button></td>
+        </tr>
+
+        
+    </table>
+</div>
+
+{% comment %} Modal transparent gray background {% endcomment %}
+<div id="modal-overlay"></div>
+{% comment %} Modal {% endcomment %}
+
+<div id="modal" class="modal goods-table-modal">
+
+    {% comment %} Grid header {% endcomment %}
+    <div class="grid-header"> 
+        <span id="close">&times</span>
+        <h2>Description</h2>
+    </div>
+
+    {% comment %} Grid content {% endcomment %}
+    <div class="modal-content grid-newscolumn">
+    <div class="grid-content"> 
+        <h3>Identification</h3>
+        <ul>
+            <div>
+                <li>ID:</li>
+                <li>Serial Number:</li>
+                <li>GRN Number:</li>
+                <li>Model Number:</li>
+                <li>Customer:</li> {% comment %} Use Customer ID{% endcomment%}
+                <li>Contact Person
+                <li>Type of good</li>
+                <li>Urgency</li>
+            </div>
+            <div>
+                {% comment %} Real data comes here {% endcomment %}
+            </div>
+        </ul>
+        <h3>Description</h3>
+        <ul>
+            <div>
+                <li>Status:</li>
+                <li>Location:</li>
+                <li>Reason for return:</li>
+                <li>Credit request reason:</li>
+            </div>
+            <div>
+                {% comment %} Real data comes here {% endcomment %}
+            </div>
+            
+        </ul>
+        <h3>Numbers</h3>
+        <ul>
+            <div> 
+                <li>Job Card Number:</li>
+                <li>Report Quote Number:</li>
+                <li>Customer Order Number</li>
+                <li>Invoice Credit Number:</li>
+                <li>Dispatch Note:</li>
+                <li>Invoice Credit Value:</li>
+            </div>
+            <div>
+                {% comment %} Real data comes here {% endcomment %}
+            </div>
+        </ul>
+    </div>
+    <div class="grid-content"> 
+        <h3>Dates</h3>
+        <ul>
+            <div>
+                <li>Date returned:</li>
+                <li>Credit Passed Date:</li>
+                <li>Original Invoice Date:</li>
+            </div>
+            <div>
+                {% comment %} Real data comes here {% endcomment %}
+            </div>
+        </ul>
+        <h3>Duration</h3>
+        <ul>
+            <div>
+                <li>Days in warehouse:</li>
+                <li>Days Awaiting Us:</li>
+                <li>Days Awaiting Client:</li>
+            </div>
+            <div>
+                {% comment %} Real data comes here {% endcomment %}
+            </div>
+        </ul>
+    </div>
+</div>
+</div>
+{% endblock %}

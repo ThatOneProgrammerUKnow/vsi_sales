@@ -1,0 +1,94 @@
+/* ID's for JS */
+#modal-overlay{
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    background-color: rgb(33, 37, 41, 0.5);
+    width: 100%;
+    height: 100%;
+}
+#modal{
+    display: none;
+    z-index: 1001;
+}
+#close{
+    position: absolute;
+    right: 23px;
+    top: 5px;
+    font-size: 35px;
+}
+#close:hover{
+    color: #2A6F97;
+    cursor: pointer;
+}
+
+/* Modal styling */
+.modal{ 
+    position: fixed;
+    top: 50px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column; 
+
+    background-color: rgb(222, 226, 230);  
+    border-radius: 20px;
+    box-shadow: 0 0 2px 2px rgb(0, 0, 0, 0.5);
+}
+.modal-content{ /* Hides scroll bar overflow */
+    overflow: auto;
+    padding: 10px 5px;
+}
+.grid-newscolumn{ /* A grid with a header andd two even columns | Used in @media > 1350px*/
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 10px;
+}
+
+.grid-header{
+    text-align: center;
+    top: 0;   
+    padding: 0; 
+    margin: 0;
+    height: 60px;
+    overflow: hidden;
+    border-bottom: 2px solid gray;
+}
+.grid-newscolumn h2{
+    background-color: rgb(222, 226, 230);  
+}
+
+.grid-newscolumn h2, h3{
+    text-align: center;
+    margin: 0;
+}
+.modal ul{
+    list-style-type: none;
+    display: grid;
+    grid-template-columns:1fr 1fr; 
+}
+/* Sizes */
+.goods-table-modal{
+    width: 70%;
+    height: 90%;
+}
+.notifications-modal{
+    width: 40%;
+    height: 80%;
+}
+
+/* One culumn modal */
+@media only screen and (max-width: 1350px){
+    .modal{
+        width: 90%;
+    }
+    .grid-newscolumn{
+        grid-template-columns: auto;
+        grid-gap: 0;
+    }
+
+}
