@@ -1,0 +1,13 @@
+
+<fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-64 border p-4">
+    <legend class="fieldset-legend">{{ form_field.label }}</legend>
+    <label class="label">
+        {{ form_field }}
+        <p class="label" for="{{ form_field.id_for_label }}">
+        {% if form_field.help_text %}
+            <small class="form-text text-muted">{{ form_field.help_text }}</small>
+        {% endif %}
+        </p>
+    </label>
+    {{ form_field.errors }}
+</fieldset>

@@ -1,0 +1,20 @@
+{% extends "page/base.html" %}
+
+{% block content %}
+<div class="h-full flex flex-col overflow-hidden bg-primary">
+    <section>
+      <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+          <div class="w-full bg-white rounded-lg shadow-sm dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+              <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                  <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-xl dark:text-white">
+                    Verify Your Email Address
+                  </h1>
+                  <p>
+                    We have sent an email to you for verification. Follow the link provided to finalize the signup process. If you do not see the verification email in your main inbox, check your spam folder. Please contact us if you do not receive the verification email within a few minutes.
+                  </p>
+              </div>
+          </div>
+      </div>
+    </section>
+</div>
+{% endblock content %}

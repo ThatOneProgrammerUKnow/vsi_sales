@@ -1,0 +1,33 @@
+version: '3.3'
+
+services:
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: ${DJANGO_DATABASE_NAME}
+      POSTGRES_PASSWORD: ${DJANGO_DATABASE_USER}
+      POSTGRES_USER: ${DJANGO_DATABASE_PASSWORD}
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    networks:
+      - weg_solutions
+
+
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+    networks:
+      - weg_solutions
+
+
+volumes:
+
+  postgres_data:
+
+networks:
+  weg_solutions:
+    driver: bridge

@@ -1,0 +1,35 @@
+
+{% extends "page/base.html" %}
+{% load form_tags %}
+
+
+
+{% block content %}
+<div class="flex flex-col h-full overflow-auto bg-primary">
+    <section>
+      <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+          <div class="w-full bg-white rounded-lg border shadow-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+              <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                  <h1 class="text-xl text-primary font-bold leading-tight tracking-tight md:text-xl dark:text-white">
+                      Sign in
+                  </h1>
+                  <form class="space-y-4 md:space-y-6" method="post">
+                    {% csrf_token %}
+                    {% render_form_fields form "login" "password" "remember" %}
+                    <div class="flex items-center flex-col gap-2">
+                        <input type="submit" name="submit" value="Sign In" class="w-full btn btn-primary btn-sm" id="submit-id-submit"></input>
+                        
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <a href="{% url 'account_reset_password' %}" class="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500">Forgot password?</a>
+                    </div>
+                    <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+                        Don’t have an account yet? <a href="{% url 'account_signup' %}" class="font-medium text-blue-600 hover:underline dark:text-blue-500">Sign up</a>
+                    </p>
+                  </form>
+              </div>
+          </div>
+      </div>
+    </section>
+</div>
+{% endblock content %}

@@ -1,0 +1,121 @@
+@import 'tailwindcss';
+@plugin 'tailwind-scrollbar';
+@plugin "daisyui" {
+    themes: light --default;
+  }
+
+@plugin "daisyui/theme" {
+    name: "light";
+    default: true;
+}
+
+@config '../../tailwind.config.js';
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+.checkboxinput {
+  @apply w-4 h-4 border border-gray-300 rounded bg-gray-50;
+}
+
+[disabled] {
+  @apply bg-gray-200 text-gray-500;
+}
+
+[x-cloak] {
+  display: none;
+}
+
+.feature-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.section {
+  scroll-margin-top: 80px;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+.solid {
+  color: white;
+}
+
+.errorlist {
+  @apply text-red-500 text-sm;
+}
+
+
+.option {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+}
+
+.option-label {
+    background: #3b82f6;
+    color: white;
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: inline-block;
+}
+
+@utility banner-base {
+  padding: 12px;
+  border-radius: 6px;
+}
+
+@utility banner-base {
+  @apply text-gray-500 p-2 rounded-lg border-l-5 text-sm;
+}
+
+.banner-info {
+  @apply banner-base bg-green-100/50 border-green-500;
+}
+
+.banner-warning {
+  @apply banner-base bg-yellow-100/50 border-yellow-500;
+}
+
+.banner-error {
+  @apply banner-base bg-red-100/50 border-red-500;
+}
+
+.sidebar-item.active {
+  @apply bg-white/90;
+}
+
+.menu-title {
+  @apply text-primary;
+}

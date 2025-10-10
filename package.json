@@ -1,0 +1,40 @@
+{
+  "name": "weg_solutions",
+  "version": "1.0.0",
+  "private": true,
+  "devDependencies": {
+    "copy-webpack-plugin": "^12.0.2",
+    "css-loader": "^7.1.2",
+    "daisyui": "^5.0.28",
+    "jquery": "^3.7.1",
+    "mini-css-extract-plugin": "^2.9.0",
+    "postcss-loader": "^8.1.1",
+    "postcss-preset-env": "^9.6.0",
+    "sass": "^1.77.8",
+    "sass-loader": "^14.2.1",
+    "tailwindcss": "^4.1.4",
+    "webpack-cli": "^5.1.4",
+    "webpack-watch-external-files-plugin": "^3.1.0"
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.1.4",
+    "copy-webpack-plugin": "^12.0.2",
+    "css-loader": "^7.1.2",
+    "flowbite": "^2.3.0",
+    "htmx.org": "^1.9.12",
+    "jquery": "^3.7.1",
+    "mini-css-extract-plugin": "^2.9.0",
+    "postcss": "^8.5.3",
+    "postcss-loader": "^8.1.1",
+    "postcss-preset-env": "^9.6.0",
+    "sass": "^1.77.8",
+    "sass-loader": "^14.2.1",
+    "tailwind-scrollbar": "^4.0.2",
+    "webpack": "^5.95.0"
+  },
+  "scripts": {
+    "build": "NODE_ENV=production webpack --mode production",
+    "dev": "webpack --mode development",
+    "dev-watch": "webpack --mode development --watch"
+  }
+}

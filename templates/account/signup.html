@@ -1,0 +1,41 @@
+
+{% extends "page/base.html" %}
+{% load form_tags %}
+
+{% block scripts %}
+    <script src="https://accounts.google.com/gsi/client" async></script>
+{% endblock scripts %}
+
+{% block content %}
+<div class="h-full flex flex-col overflow-auto bg-primary">
+    <section>
+        <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+            <div class="w-full bg-white rounded-lg border shadow-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+                <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                    <h1 class="text-xl text-primary font-bold leading-tight tracking-tight md:text-xl dark:text-white">
+                        Sign up
+                    </h1>
+                    <form class="space-y-6" method="post" x-data="{terms_accepted: false}">
+                        {% csrf_token %}
+                        {% render_form_fields form "email" "password1" "password2" %}
+                        <fieldset class="fieldset">
+                            <label class="label">
+                            <input type="checkbox" class="checkbox" required x-model="terms_accepted" />
+                            By continuing I accept the 
+                            <button data-modal-target="disclaimer-modal" data-modal-toggle="disclaimer-modal" role="button" type="button" class="font-medium text-primary-600 hover:underline dark:text-primary-500" href="#">
+                                Terms and Conditions
+                            </button>
+                        </fieldset>
+                        <button :disabled="!terms_accepted" :class="terms_accepted ? 'btn-primary' : 'bg-gray-700'" type="submit" name="submit" class="w-full btn btn-sm" id="submit-id-submit">Submit</button>
+                        <p class="text-sm font-light text-gray-500 pt-6">
+                            Already have an account? <a href="{% url 'account_login' %}" class="font-medium text-blue-600 hover:underline dark:text-blue-500">Sign in</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+            
+            
+            
+    </section>
+</div>
+{% endblock content %}

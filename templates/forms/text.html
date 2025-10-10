@@ -1,0 +1,13 @@
+
+<div class="fieldset w-full">
+  <fieldset class="fieldset w-full">
+      <legend class="fieldset-legend">{{ form_field.label }}</legend>
+      {{ form_field }}
+      <p class="label" for="{{ form_field.id_for_label }}">
+        {% if form_field.help_text %}
+          <small class="form-text text-muted">{{ form_field.help_text }}</small>
+        {% endif %}
+      </p>
+      {{ form_field.errors }}
+  </fieldset>
+</div>
