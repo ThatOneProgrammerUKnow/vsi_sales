@@ -48,10 +48,7 @@ LOCAL_APPS = [
 THIRD_PARTY_APPS = [
     "allauth",
     "allauth.account",
-    
-    
     "django_celery_beat",
-    
 ]
 
 INSTALLED_APPS = (
