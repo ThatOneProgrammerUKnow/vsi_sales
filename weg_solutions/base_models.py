@@ -14,9 +14,3 @@ class BaseModel(models.Model):
 
     class Meta:
         abstract = True
-
-class BaseGroupModel(BaseModel):
-    group = models.ForeignKey("accounts.Group", on_delete=models.CASCADE)
-
-    class Meta:
-        abstract = True

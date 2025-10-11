@@ -1,6 +1,6 @@
 import uuid
 from django.contrib.auth.models import AbstractUser
-from weg_solutions.base_models import BaseModel, BaseGroupModel
+from weg_solutions.base_models import BaseModel
 from django.db import models
 
 
@@ -22,16 +22,3 @@ class User(AbstractUser):
         if not self.username:
             self.username = self.email
         super().save(*args, **kwargs)
-
-
-class Group(BaseModel):
-    name = models.CharField(max_length=100)
-    slug = models.CharField(max_length=100, unique=True, db_index=True)
-
-
-class GroupUser(BaseGroupModel):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    group = models.ForeignKey("accounts.Group", on_delete=models.CASCADE)
-
-    class Meta:
-        unique_together = ("user", "group")

@@ -43,6 +43,7 @@ FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
 LOCAL_APPS = [
     "apps.accounts",
+    "apps.grn",
 ]
 
 THIRD_PARTY_APPS = [
@@ -120,7 +121,6 @@ else:
             "PORT": env("DJANGO_DATABASE_PORT", default="5432"),
         }
     }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

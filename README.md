@@ -62,3 +62,10 @@ Now you can run the django development server:
 ```shell
 python manage.py runserver
 ```
+
+## Creating new Django apps
+- in the apps directory, create a folder with your app's name
+- run
+```shell
+python .\manage.py startapp {your-app-name} apps/{your-app-name}
+```

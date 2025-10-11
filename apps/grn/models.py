@@ -14,27 +14,28 @@ class Customer(models.Model):
         return f'{self.name} {self.branch}'
 
 # ====================| Contact persons | ==================== #
-class ContactPersons(models.Model):
+class ContactPerson(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     surname = models.CharField(max_length=100)
-    company_id = models.ForeignKey(Customer, on_delete=models.PROTECT)
+    customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
 
     def __str__(self):
-        return f'{self.name} from {self.company_id.name} {self.company_id.branch}'
+        return f'{self.name} from {self.Customer.name} {self.cusomer.branch}'
 
 # ====================| GRN Class | ==================== #
 class GRN(models.Model):
     # Created automatically when the grn form is filled in, but also posible to insert another grn_number manually. 
     grn_number = models.CharField(max_length=20, unique=True, primary_key=True)
     date_returned = models.DateField()
+    customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
 
     def __str__(self):
         return f'GRN {self.grn_number} returned on {self.date_returned}'
 
 
 # ====================| Goods class | ==================== #
-class Goods(models.Model):
+class GoodsItem(models.Model):
 # Lists --------------------------------------------------------------------------------------------#
 
     # I would like to make add dynamic choices in the future. Where the Technician can add sublocations etc. 
@@ -80,10 +81,8 @@ class Goods(models.Model):
     # Identification
     id = models.AutoField(primary_key=True)
     serial_number = models.CharField(max_length=100, db_index = True)
-    grn_number = models.ForeignKey(GRN, on_delete=models.PROTECT, db_index=True)
+    grn = models.ForeignKey(GRN, on_delete=models.PROTECT, db_index=True)
     model_number = models.CharField(max_length=100)
-    customer_id = models.ForeignKey(Customer, on_delete=models.PROTECT)
-    contact_person = models.ForeignKey(ContactPersons, on_delete=models.PROTECT)
     type_of_good = models.CharField(max_length=100, choices=type_of_good_options)
     urgency = models.CharField(max_length=50, choices=urgency_options, default="not_urgent")
 
@@ -114,4 +113,4 @@ class Goods(models.Model):
     
 
     def __str__(self):
-        return f"{self.serial_number} - {self.customer_id.name} ({self.type_of_good})"
+        return f"{self.serial_number} - {self.customer.name} ({self.type_of_good})"
