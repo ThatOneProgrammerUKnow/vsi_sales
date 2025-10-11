@@ -37,4 +37,5 @@ urlpatterns = [
     ),
     path("admin/", admin.site.urls),
     path("dashboard/", DashboardView.as_view(), name="dashboard"),
+    path("grn/", include("apps.grn.urls", namespace="grn")),
 ]
