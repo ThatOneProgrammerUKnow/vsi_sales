@@ -1,6 +1,4 @@
 {% load static %}
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -30,6 +28,33 @@
     {% block additional_styles %}
     {% endblock additional_styles %}
 </head>
+{% comment %} Header - Nav bar {% endcomment %}
+<header class="panel">
+    <div class="heading-container">
+        <h1>VSI - Goods Returned Program</h1>
+
+        <div id="" class="bell">
+            <span class="badge">3</span>
+            <img src="{% static 'grn/images/icons/notification_bell.png' %}" alt="Notification Bell">
+        </div>
+    </div>
+    <nav>
+        <ul>
+            <li class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                <a href="#" >Dashboard</a>
+            </li>
+            <li>
+                <a>GRN Management</a>
+            </li>
+            <li class="{% if request.resolver_match.url_name == 'goods_table' %}active{% endif %}">
+                <a href={% url 'grn:goods_table' %}>Goods Table</a>
+            </li>
+            <li>
+                <a>Client Table</a>
+            </li>
+        </ul>
+    </nav>
+</header>
 
 <body class="bg-cover bg-center bg-fixed" hx-headers='{"X-CSRFToken": {{ csrf_token }}}'>
     <div class="h-screen">
