@@ -1,53 +1,39 @@
-{% extends "base.html" %}
+{% extends "page/base.html" %}
 
 {% block title %}VSI Solutions | Dashboard{% endblock %}
 
 {% block content %} 
-<div class="container-grid">
-    <section class="panel">
-        <h2>Dashboard</h2>
-
-        <div class="card-container">
-            <div class="card">
-                <span>3</span>
-                <p>Lorem ipsum dolor sit amet.</p>
-            </div>
-
-            <div class="card">
-                <span>2</span>
-                <p>Lorem ipsum dolor sit amet.</p>
-            </div>
-
-            <div class="card">
-                <span>7</span>
-                <p>Lorem ipsum dolor sit amet.</p>
-            </div>
-
-            <div class="card">
-                <span>9</span>
-                <p>Lorem ipsum dolor sit amet.</p>
-            </div>
-
-            <div class="card">
-                <span>12</span>
-                <p>Lorem ipsum dolor sit amet.</p>
-            </div>
-
-            <div class="card">
-                <span>4</span>
-                <p>Lorem ipsum dolor sit amet.</p>
-            </div>
-
+<!--Dashboard Panel-->
+<section class="m-9 p-6 bg-white shadow-[1px_0_2px_2px_rgb(0,0,0,0.25)] text-center rounded-xl">
+    <h2 class="text-2xl font-bold">Dashboard</h2>
+    <div class="flex justify-evenly">
+        <div class="shadow-[1px_1px_2px_2px_rgb(0,0,0,0.25)] rounded-2xl p-5 m-5">
+            <h3 class="text-x1 font-bold">Lorum Ipsum</h3>
+            <p>Lorem ipsum dolor sit amet</p>
         </div>
+        <div class="shadow-[1px_1px_2px_2px_rgb(0,0,0,0.25)] rounded-2xl p-5 m-5">
+            <h3 class="text-x1 font-bold">Lorum Ipsum</h3>
+            <p>Lorem ipsum dolor sit amet</p>
+        </div>
+        <div class="shadow-[1px_1px_2px_2px_rgb(0,0,0,0.25)] rounded-2xl p-5 m-5">
+            <h3 class="text-x1 font-bold">Lorum Ipsum</h3>
+            <p>Lorem ipsum dolor sit amet</p>
+        </div>
+        <div class="shadow-[1px_1px_2px_2px_rgb(0,0,0,0.25)] rounded-2xl p-5 m-5">
+            <h3 class="text-x1 font-bold">Lorum Ipsum</h3>
+            <p>Lorem ipsum dolor sit amet</p>
+        </div>
+    </div>
+</section>
 
-    </section>
-    <section class="panel">
-        <h2>Notifications</h2>
-        <ul>
-            <li>A new drive was returned</li>
-            <li>Gavin requested a drive</li>
-            <li>A PO was recieved</li>
-        </ul>
-    </section>
-</div>
+<!--Notifications Panel-->
+<section class="m-9 p-4 bg-white shadow-[1px_0_2px_2px_rgb(0,0,0,0.25)] text-center rounded-xl">
+    <h2 class="text-2xl font-bold">Notifications</h2>
+    <ul class="">
+        <li>Lorum Ipsum dolor sit amet</li>
+        <li>Lorum Ipsum dolor sit amet</li>
+        <li>Lorum Ipsum dolor sit amet</li>
+        <li>Lorum Ipsum dolor sit amet</li>
+    </ul>
+</section>
 {% endblock %}
