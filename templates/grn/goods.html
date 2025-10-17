@@ -24,7 +24,8 @@
                 {% for i in 'Lorem'%}
                     <tr class="h-1">
                         {% for i in '12345678'%} <td>Lorem ipsum</td> {% endfor %}
-                        <td><button class="btn btn-sm font-medium m-">View more</button></td>
+                        {# Open Modal #}
+                        <td><button class="btn btn-sm font-medium m-" onclick="view_more_modal.showModal()">View more</button></td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -32,89 +33,14 @@
     </div>
 </div>
 
-{% comment %} Modal transparent gray background {% endcomment %}
-<div class="fixed"></div>
-{% comment %} Modal {% endcomment %}
-
-<div id="modal" class="modal goods-table-modal">
-
-    {% comment %} Grid header {% endcomment %}
-    <div class="grid-header"> 
-        <span id="close">&times</span>
-        <h2>Description</h2>
-    </div>
-
-    {% comment %} Grid content {% endcomment %}
-    <div class="modal-content grid-newscolumn">
-    <div class="grid-content"> 
-        <h3>Identification</h3>
-        <ul>
-            <div>
-                <li>ID:</li>
-                <li>Serial Number:</li>
-                <li>GRN Number:</li>
-                <li>Model Number:</li>
-                <li>Customer:</li> {% comment %} Use Customer ID{% endcomment%}
-                <li>Contact Person
-                <li>Type of good</li>
-                <li>Urgency</li>
-            </div>
-            <div>
-                {% comment %} Real data comes here {% endcomment %}
-            </div>
-        </ul>
-        <h3>Description</h3>
-        <ul>
-            <div>
-                <li>Status:</li>
-                <li>Location:</li>
-                <li>Reason for return:</li>
-                <li>Credit request reason:</li>
-            </div>
-            <div>
-                {% comment %} Real data comes here {% endcomment %}
-            </div>
-            
-        </ul>
-        <h3>Numbers</h3>
-        <ul>
-            <div> 
-                <li>Job Card Number:</li>
-                <li>Report Quote Number:</li>
-                <li>Customer Order Number</li>
-                <li>Invoice Credit Number:</li>
-                <li>Dispatch Note:</li>
-                <li>Invoice Credit Value:</li>
-            </div>
-            <div>
-                {% comment %} Real data comes here {% endcomment %}
-            </div>
-        </ul>
-    </div>
-    <div class="grid-content"> 
-        <h3>Dates</h3>
-        <ul>
-            <div>
-                <li>Date returned:</li>
-                <li>Credit Passed Date:</li>
-                <li>Original Invoice Date:</li>
-            </div>
-            <div>
-                {% comment %} Real data comes here {% endcomment %}
-            </div>
-        </ul>
-        <h3>Duration</h3>
-        <ul>
-            <div>
-                <li>Days in warehouse:</li>
-                <li>Days Awaiting Us:</li>
-                <li>Days Awaiting Client:</li>
-            </div>
-            <div>
-                {% comment %} Real data comes here {% endcomment %}
-            </div>
-        </ul>
-    </div>
-</div>
-</div>
+<!-- Modal -->
+<dialog id="view_more_modal" class="modal">
+  <div class="modal-box fixed top-[5%] w-full">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+    <h3 class="text-lg font-bold">Hello!</h3>
+    <p class="py-4">Press ESC key or click on ✕ button to close</p>
+  </div>
+</dialog>
 {% endblock %}
