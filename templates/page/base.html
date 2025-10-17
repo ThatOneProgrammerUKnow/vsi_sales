@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html class="bg-sky-800" lang="en">
+<html class="m-0 p-0" lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -32,8 +32,9 @@
     {% endblock additional_styles %}
 </head>
 
-<body class=" bg-cover bg-center bg-fixed m-0 p-0 text-sky-900" hx-headers='{"X-CSRFToken": {{ csrf_token }}}'>
-    <div class="h-screen m-5">
+<body class="h-screen bg-cover bg-center bg-fixed m-0 p-0 pt-1 text-sky-900 bg-sky-800" 
+hx-headers='{"X-CSRFToken": {{ csrf_token }}}'>
+    <div class="">
         <!-- Header & Nav bar -->
          {# Header #}
         <header class="m-9 p-4 bg-white shadow-[1px_0_2px_2px_rgb(0,0,0,0.25)] text-center rounded-xl relative">
