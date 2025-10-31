@@ -3,8 +3,8 @@ from django.views.generic import TemplateView, CreateView
 from django.urls import reverse_lazy
 from apps.shared.base_views import BaseSessionViewMixin, SingleTableViewBase
 from django.views.generic import TemplateView
-from .models import GRN, Customer
-from .tables import GRNTable, CustomerTable
+from .models import GRN, Customer, GoodsItem
+from .tables import GRNTable, CustomerTable, GoodsItemTable
 from .forms import GRNForm, CustomerForm
 
 
@@ -42,3 +42,10 @@ class CreateCustomerView(BaseSessionViewMixin, CreateView):
     menu_slug = 'communication_log'
     success_url = reverse_lazy('grn:customer_management')
 
+
+class GoodsItemList(SingleTableViewBase, BaseSessionViewMixin, TemplateView):
+    template_name = 'grn/goods_list.html'
+    menu_slug = 'drive_management'
+    model = GoodsItem
+    table_class = GoodsItemTable
+    paginate_by = 20

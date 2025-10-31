@@ -1,6 +1,6 @@
 from django import forms
 from django.utils import timezone
-from .models import GRN, Customer
+from .models import GRN, Customer, GoodsItem
 
 
 class GRNForm(forms.ModelForm):
@@ -34,4 +34,3 @@ class CustomerForm(forms.ModelForm):
                 'placeholder': 'Branch (optional)'
             }),
         }
-
