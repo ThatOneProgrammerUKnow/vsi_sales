@@ -293,15 +293,4 @@ DJANGO_TABLES2_TABLE_ATTRS = {
     "th": {"class": "px-6 py-3"},
     "td": {"class": "px-6 py-4 overflow-hidden hover:overflow-visible text-ellipsis"},
 }
-DJANGO_TABLES2_ROW_ATTRS = {
-    "class": """
-        hover:bg-gray-200 odd:bg-white even:bg-gray-50 border-b border-gray-200
-        data-redirect-url:[&:not([data-redirect-url=''])]:hover:cursor-pointer
-    """,
-    # "id": lambda record: f"record-{record.id}",
-    "role": "button",
-    # "data-redirect-url": lambda record: record.get_absolute_url()
-    # if hasattr(record, "get_absolute_url")
-    # else "",
-}
 DJANGO_TABLES2_TEMPLATE = "table.html"

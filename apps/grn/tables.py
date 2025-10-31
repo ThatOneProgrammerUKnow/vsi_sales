@@ -11,11 +11,9 @@ class GRNTable(tables.Table):
     class Meta:
         model = GRN
         exclude = ("id", "updated_at")
-        # attrs = settings.DJANGO_TABLES2_ROW_ATTRS
 
 
 class CustomerTable(tables.Table):
     class Meta:
         model = Customer
         exclude = ("id", "updated_at")
-        # attrs = settings.DJANGO_TABLES2_ROW_ATTRS
