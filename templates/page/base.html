@@ -32,55 +32,10 @@
     {% endblock additional_styles %}
 </head>
 
-<body class="min-h-screen bg-cover bg-center bg-fixed m-0 p-0 pt-1 text-sky-900 bg-sky-800" 
-hx-headers='{"X-CSRFToken": {{ csrf_token }}}'>
+<body class="h-screen bg-cover bg-center bg-fixed m-0 p-0 pt-1 text-sky-900 bg-sky-800" hx-headers='{"X-CSRFToken": {{ csrf_token }}}'>
+    {% block header %}
+    {% endblock  %}
     <div class="">
-        <!-- Header & Nav bar -->
-         {# Header #}
-        <header class="m-9 p-4 bg-white shadow-[1px_0_2px_2px_rgb(0,0,0,0.25)] text-center rounded-xl relative">
-            <div>
-                <div class="flex flex-row justify-center">
-                    <h1 class="text-4xl text-sky-800 font-bold">VSI - Administrative solution</h1>
-                    {# Notification bell #}
-                    <div class="absolute right-5 hover:translate-y-[-2px] hover:cursor-pointer" 
-                    onclick="notify_modal.showModal()">
-                        <img class="relative bg-gray-50 shadow-[0_1px_1px_1px_rgb(0,0,0,0.25)] rounded-full p-2 w-[40px]" 
-                        src="{% static 'grn/images/icons/notification_bell.png' %}" alt="Notification bell">
-
-                        <span class="absolute right-[-1px] top-[-1px] rounded-full shadow-[0_1px_1px_1px_rgb(0,0,0,0.25)]
-                        bg-gray-300 h-2 w-2 p-[8px] text-xs flex justify-center items-center
-                        ">3</span> 
-                    </div>
-                </div>
-
-                {# Navigation bar #}
-                <nav class="py-5">
-                    <ul class="flex justify-evenly">
-                        <li><a class="btn text-sky-800 font-medium shadow-[1px_1px_0.5px_0.5px_rgb(0,0,0,0.25)] hover:bg-gray-200"
-                            href="{% url 'dashboard' %}">Dashboard</a></li>
-                        <li><a class="btn text-sky-800 font-medium shadow-[1px_1px_0.5px_0.5px_rgb(0,0,0,0.25)] hover:bg-gray-200"
-                            href="">GRN Management</a></li>
-                        <li><a class="btn text-sky-800 font-medium shadow-[1px_1px_0.5px_0.5px_rgb(0,0,0,0.25)] hover:bg-gray-200"
-                            href=" {% url 'grn:goods' %}">Goods</a></li>
-                        <li><a class="btn text-sky-800 font-medium shadow-[1px_1px_0.5px_0.5px_rgb(0,0,0,0.25)] hover:bg-gray-200"
-                            href="">Clients</a></li>
-                    </ul>
-                </nav>
-            </div>
-        </header>
-
-        <!-- Notifications modal -->
-        <dialog id="notify_modal" class="modal">
-        <div class="modal-box fixed top-[5%] w-full">
-            <form method="dialog">
-            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-            </form>
-            <h3 class="text-lg font-bold text-center">Notifications</h3>
-            <ul class="list-disc pl-10">
-                {% for i in "123456"%}<li>Lorem</li>{% endfor %}
-            </ul>
-        </div>
-        </dialog>
         {% block content %}
         {% endblock content %}
     </div>
