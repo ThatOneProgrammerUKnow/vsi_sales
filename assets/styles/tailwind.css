@@ -119,3 +119,15 @@
 .menu-title {
   @apply text-primary;
 }
+
+.tab {
+  @apply btn bg-gray-100 text-gray-700;
+}
+
+li.tab a {
+  @apply w-full h-full flex items-center justify-center;
+}
+
+.tab-active {
+  @apply btn-active bg-white text-black;
+}

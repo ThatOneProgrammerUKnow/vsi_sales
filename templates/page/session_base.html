@@ -5,15 +5,13 @@
 <div class="flex flex-col h-full">
     <div class="flex-1 h-full overflow-y-auto">
         <div class="flex flex-col sm:flex-row sm:mx-auto h-full">
-            {% include 'page/sidebar.html' %}
             <div class="sm:flex-1 p-4 bg-gray-50 h-full overflow-y-scroll sm:w-full">
                 {% include "page/messages.html" %}
                 <div class="flex flex-col h-full">
-                    {% if page_title %}
                     <div class="flex flex-row justify-center sm:justify-between">
                         <div class="flex flex-col p-4">
                             <div class="text-xl text-primary font-semibold sm:text-xl">
-                                {{ page_title }}
+                                VSI Solutions
                             </div>
                         </div>
                         <div class="flex flex-row justify-center items-center">
@@ -21,14 +19,23 @@
                             {% endblock page_actions %}
                         </div>
                     </div>
-                    {% endif %}
 
-                    {% if page_description %}
-                        <div class="text-md mb-4 px-4">
-                            {{ page_description }}
-                        </div>
-                    {% endif %}
-
+                    <div class="w-full">
+                        <ul class="flex gap-2">
+                            <li class="tab {% if menu_slug == 'dashboard' %}tab-active{% endif %}">
+                                <a href="{% url 'dashboard' %}">Dashboard</a>
+                            </li>
+                            <li class="tab {% if menu_slug == 'grn_management' %}tab-active{% endif %}">
+                                <a href="{% url 'grn:grn_management' %}">GRN Management</a>
+                            </li>
+                            <li class="tab {% if menu_slug == 'drive_management' %}tab-active{% endif %}">
+                                <a href="{% url 'grn:drive_management' %}">Drive Management</a>
+                            </li>
+                            <li class="tab {% if menu_slug == 'communication_log' %}tab-active{% endif %}">
+                                <a href="{% url 'grn:communication_log' %}">Communication Log</a>
+                            </li>
+                        </ul>
+                    </div>
                     {% block page %}
                     {% endblock page %}
                 </div>
