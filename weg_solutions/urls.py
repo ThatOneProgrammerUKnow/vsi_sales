@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import RedirectView
 
-from apps.accounts.views import LoginView, SignupView, DashboardView
+from apps.accounts.views import LoginView, SignupView, DashboardView, logout_view
 
 urlpatterns = [
     path("",
@@ -27,6 +27,7 @@ urlpatterns = [
         name="root-redirect",
     ),
     # Override allauth views
+    path("accounts/logout/", logout_view, name="account_logout"),
     path("accounts/login/", LoginView.as_view(), name="account_login"),
     path("accounts/signup/", SignupView.as_view(), name="account_signup"),
     path("accounts/", include("allauth.urls")),
