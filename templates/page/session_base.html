@@ -14,9 +14,11 @@
                                 VSI Solutions
                             </div>
                         </div>
-                        <div class="flex flex-row justify-center items-center">
-                            {% block page_actions %}
-                            {% endblock page_actions %}
+                        <div class="flex flex-row justify-center items-center gap-4 pr-4">
+                            <span class="text-sm text-gray-700">{{ user.get_full_name|default:user.username }}</span>
+                            <a href="{% url 'account_logout' %}" class="btn bnt-sm">
+                                Logout
+                            </a>
                         </div>
                     </div>
 
@@ -34,10 +36,21 @@
                             <li class="tab {% if menu_slug == 'communication_log' %}tab-active{% endif %}">
                                 <a href="{% url 'grn:communication_log' %}">Communication Log</a>
                             </li>
+                            <li class="tab {% if menu_slug == 'communication_log' %}tab-active{% endif %}">
+                                <a href="{% url 'grn:communication_log' %}">Customer Management</a>
+                            </li>
                         </ul>
                     </div>
-                    {% block page %}
-                    {% endblock page %}
+                    <div class="flex flex-col gap-2">
+                        <div class="w-full flex justify-end">
+                            {% block page_actions %}
+                            {% endblock page_actions %}
+                        </div>
+                        <div>
+                            {% block page %}
+                            {% endblock page %}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

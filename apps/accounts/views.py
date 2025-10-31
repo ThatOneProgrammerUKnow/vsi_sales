@@ -1,7 +1,8 @@
 from allauth.account import views as allauth_views
 from django.conf import settings
+from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from apps.shared.base_views import BaseSessionView
+from apps.shared.base_views import BaseSessionViewMixin
 
 class LoginView(allauth_views.LoginView):
     def get_context_data(self, **kwargs):
@@ -17,6 +18,6 @@ class SignupView(allauth_views.SignupView):
         return context
 
 
-class DashboardView(LoginRequiredMixin, BaseSessionView):
+class DashboardView(LoginRequiredMixin, BaseSessionViewMixin, TemplateView):
     template_name = "account/dashboard.html"
     menu_slug = "dashboard"

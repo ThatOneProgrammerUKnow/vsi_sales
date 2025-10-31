@@ -50,6 +50,7 @@ THIRD_PARTY_APPS = [
     "allauth",
     "allauth.account",
     "django_celery_beat",
+    "django_tables2",
 ]
 
 INSTALLED_APPS = (
@@ -283,3 +284,23 @@ EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", default=DEFAULT_EMAIL_BACKEND)
 EMAIL_HOST = os.getenv("EMAIL_HOST", default="smtp.zeptomail.com")
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", default="")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", default="")
+
+
+DJANGO_TABLES2_TABLE_ATTRS = {
+    "class": "table-fixed w-full text-sm text-left rtl:text-right text-gray-500",
+    "thead": {"class": "text-xs text-gray-700 uppercase bg-gray-100"},
+    "th": {"class": "px-6 py-3"},
+    "td": {"class": "px-6 py-4 overflow-hidden hover:overflow-visible text-ellipsis"},
+}
+DJANGO_TABLES2_ROW_ATTRS = {
+    "class": """
+        hover:bg-gray-200 odd:bg-white even:bg-gray-50 border-b border-gray-200
+        data-redirect-url:[&:not([data-redirect-url=''])]:hover:cursor-pointer
+    """,
+    # "id": lambda record: f"record-{record.id}",
+    "role": "button",
+    # "data-redirect-url": lambda record: record.get_absolute_url()
+    # if hasattr(record, "get_absolute_url")
+    # else "",
+}
+DJANGO_TABLES2_TEMPLATE = "table.html"
