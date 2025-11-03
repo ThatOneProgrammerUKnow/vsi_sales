@@ -29,7 +29,7 @@ class CreateGrnView(BaseSessionViewMixin, CreateView):
 
 class CustomerList(SingleTableViewBase, BaseSessionViewMixin, TemplateView):
     template_name = 'grn/customer_list.html'
-    menu_slug = 'communication_log'
+    menu_slug = 'client'
     model = Customer
     table_class = CustomerTable
     paginate_by = 20
@@ -44,8 +44,8 @@ class CreateCustomerView(BaseSessionViewMixin, CreateView):
 
 
 class GoodsItemList(SingleTableViewBase, BaseSessionViewMixin, TemplateView):
-    template_name = 'grn/goods_list.html'
-    menu_slug = 'drive_management'
+    template_name = 'grn/goods.html'
+    menu_slug = 'goods'
     model = GoodsItem
     table_class = GoodsItemTable
     paginate_by = 20

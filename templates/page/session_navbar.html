@@ -4,12 +4,20 @@
 {% block header %}
 <header class="m-9 p-4 bg-white shadow-[1px_0_2px_2px_rgb(0,0,0,0.25)] text-center rounded-xl relative">
         <div>
-            <div class="flex flex-row justify-center">
+                <div class="flex flex-row justify-center">
+                    
+                 <h1 class="absolute left-5 text-lg  text-sky-800 font-bold">{{user.username}}</h1>
+                        
                 <h1 class="text-4xl text-sky-800 font-bold">VSI - Administrative solution</h1>
 
+
+              
+    
+                {# Log out #}
+                <a href="{% url 'account_logout' %}" class="right-20 btn bnt-sm absolute font-bold shadow-[0_1px_0.5px_0.5px_rgb(0,0,0,0.1)]">Logout </a>
+                
                 {# Notification bell #}
                 <div class="absolute right-5 hover:translate-y-[-2px] hover:cursor-pointer" onclick="notify_modal.showModal()">
-
                     <img class="relative bg-gray-50 shadow-[0_1px_1px_1px_rgb(0,0,0,0.25)] rounded-full p-2 w-[40px]" 
                     src="{% static 'grn/images/icons/notification_bell.png' %}" alt="Notification bell">
 
@@ -22,13 +30,17 @@
             {# Navigation bar #}
             <nav class="py-5">
                 <ul class="flex justify-evenly">
-                    <li><a class="btn text-sky-800 font-medium shadow-[1px_1px_0.5px_0.5px_rgb(0,0,0,0.25)] hover:bg-gray-200"
+                    <li><a class="btn  font-medium shadow-[1px_1px_0.5px_0.5px_rgb(0,0,0,0.25)] hover:bg-gray-200
+                        {% if menu_slug == 'dashboard'%}bg-gray-200 translate-y-[1px]{% endif %}"
                         href="{% url 'dashboard' %}">Dashboard</a></li>
-                    <li><a class="btn text-sky-800 font-medium shadow-[1px_1px_0.5px_0.5px_rgb(0,0,0,0.25)] hover:bg-gray-200"
+                    <li><a class="btn t font-medium shadow-[1px_1px_0.5px_0.5px_rgb(0,0,0,0.25)] hover:bg-gray-200 hover:translate-y-[-2px]
+                        {% if menu_slug == 'grn_management'%}bg-gray-200 translate-y-[1px]{% endif %}"
                         href="">GRN Management</a></li>
-                    <li><a class="btn text-sky-800 font-medium shadow-[1px_1px_0.5px_0.5px_rgb(0,0,0,0.25)] hover:bg-gray-200"
+                    <li><a class="btn  font-medium shadow-[1px_1px_0.5px_0.5px_rgb(0,0,0,0.25)] hover:bg-gray-200 hover:translate-y-[-2px]
+                        {% if menu_slug == 'goods'%}bg-gray-200 translate-y-[1px]{% endif %}"
                         href=" {% url 'grn:goods' %}">Goods</a></li>
-                    <li><a class="btn text-sky-800 font-medium shadow-[1px_1px_0.5px_0.5px_rgb(0,0,0,0.25)] hover:bg-gray-200"
+                    <li><a class="btn  font-medium shadow-[1px_1px_0.5px_0.5px_rgb(0,0,0,0.25)] hover:bg-gray-200 hover:translate-y-[-2px]
+                        {% if menu_slug == 'clients'%}bg-gray-200 translate-y-[1px]{% endif %}"
                         href="">Clients</a></li>
                 </ul>
             </nav>
