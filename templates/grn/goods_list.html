@@ -1,0 +1,6 @@
+{% extends "page/session_base.html" %}
+{% load render_table from django_tables2 %}
+
+{% block page %} 
+    {% render_table table %}
+{% endblock page %}

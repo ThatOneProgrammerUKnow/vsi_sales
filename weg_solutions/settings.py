@@ -50,6 +50,7 @@ THIRD_PARTY_APPS = [
     "allauth",
     "allauth.account",
     "django_celery_beat",
+    "django_tables2",
 ]
 
 INSTALLED_APPS = (
@@ -73,6 +74,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.auth.middleware.LoginRequiredMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
@@ -283,3 +285,12 @@ EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", default=DEFAULT_EMAIL_BACKEND)
 EMAIL_HOST = os.getenv("EMAIL_HOST", default="smtp.zeptomail.com")
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", default="")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", default="")
+
+
+DJANGO_TABLES2_TABLE_ATTRS = {
+    "class": "table-fixed w-full text-sm text-left rtl:text-right text-gray-500",
+    "thead": {"class": "text-xs text-gray-700 uppercase bg-gray-100"},
+    "th": {"class": "px-6 py-3"},
+    "td": {"class": "px-6 py-4 overflow-hidden hover:overflow-visible text-ellipsis"},
+}
+DJANGO_TABLES2_TEMPLATE = "table.html"

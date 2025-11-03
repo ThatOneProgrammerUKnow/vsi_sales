@@ -1,11 +1,12 @@
 from django.db import models
 
 from django.db import models
+from apps.shared.base_models import BaseModel
 
 
 
 # ====================| Customers | ==================== #
-class Customer(models.Model):
+class Customer(BaseModel):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     branch = models.CharField(max_length=100, null=True)
@@ -14,7 +15,7 @@ class Customer(models.Model):
         return f'{self.name} {self.branch}'
 
 # ====================| Contact persons | ==================== #
-class ContactPerson(models.Model):
+class ContactPerson(BaseModel):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     surname = models.CharField(max_length=100)
@@ -24,7 +25,7 @@ class ContactPerson(models.Model):
         return f'{self.name} from {self.Customer.name} {self.cusomer.branch}'
 
 # ====================| GRN Class | ==================== #
-class GRN(models.Model):
+class GRN(BaseModel):
     # Created automatically when the grn form is filled in, but also posible to insert another grn_number manually. 
     grn_number = models.CharField(max_length=20, unique=True, primary_key=True)
     date_returned = models.DateField()
@@ -35,7 +36,7 @@ class GRN(models.Model):
 
 
 # ====================| Goods class | ==================== #
-class GoodsItem(models.Model):
+class GoodsItem(BaseModel):
 # Lists --------------------------------------------------------------------------------------------#
 
     # I would like to make add dynamic choices in the future. Where the Technician can add sublocations etc. 
