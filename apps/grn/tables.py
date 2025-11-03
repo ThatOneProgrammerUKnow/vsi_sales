@@ -16,12 +16,23 @@ class GRNTable(tables.Table):
 class CustomerTable(tables.Table):
     class Meta:
         model = Customer
+        fields = (
+            "serial_number",
+            "grn_number",
+            "model_number",
+            "customer",
+            "urgency",
+            "type",
+            "status",
+            "days_waiting",
+        )
         exclude = ("id", "updated_at")
 
 
 class GoodsItemTable(tables.Table):
     grn_number = tables.Column(accessor="grn__grn_number")
     customer_name = tables.Column(accessor="grn__customer__name")
+
 
     class Meta:
         model = GoodsItem

@@ -39,7 +39,6 @@ class GRN(BaseModel):
 class GoodsItem(BaseModel):
 # Lists --------------------------------------------------------------------------------------------#
 
-    # I would like to make add dynamic choices in the future. Where the Technician can add sublocations etc. 
     status_options = [
         ('awaiting_request', 'Awaiting Request'),
         ('test_and_report', 'Test & Report'),

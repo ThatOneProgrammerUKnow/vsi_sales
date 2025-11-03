@@ -1,6 +1,33 @@
-{% extends "page/session_base.html" %}
+{% extends "../page/session_navbar.html" %}
 {% load render_table from django_tables2 %}
 
 {% block page %} 
-    {% render_table table %}
+
+        {% load django_tables2 %}
+        <div class="m-9 p-4 bg-white shadow-[1px_0_2px_2px_rgb(0,0,0,0.25)] text-center rounded-xl flex-1">
+                <div class="overflow-x-scroll">
+                        <table class="table text-base table-pin-rows table-pin-cols">
+                                <thead class="text-sky-900">
+                                        <tr class="text-center">
+                                                {% for column in table.columns %}
+                                                        <th {{ column.attrs.th.as_html }}>{{ column.header }}</th>
+                                                {% endfor %}
+                                                <th>All Information</th>
+                                        </tr>
+                                </thead>
+                                <tbody class="text-sky-800 whitespace-nowrap">
+                                        {% for row in table.rows %}
+                                                <tr class="h-1">
+                                                        {% for column, cell in row.items %}
+                                                                <td {{ column.attrs.td.as_html }}>{{ cell }}</td>
+                                                        {% endfor %}
+                                                        <td>
+                                                                <button class="btn btn-sm font-medium" onclick="view_more_modal.showModal()">View more</button>
+                                                        </td>
+                                                </tr>
+                                        {% endfor %}
+                                </tbody>
+                        </table>
+                </div>
+        </div>
 {% endblock page %}
