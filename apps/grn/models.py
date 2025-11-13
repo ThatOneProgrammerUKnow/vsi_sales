@@ -88,7 +88,7 @@ class GoodsItem(BaseModel):
     # Identification
     id = models.AutoField(primary_key=True)
     serial_number = models.CharField(max_length=100, db_index = True)
-    grn = models.ForeignKey(GRN, on_delete=models.PROTECT, db_index=True)
+    grn = models.ForeignKey(GRN, on_delete=models.PROTECT, db_index=True, related_name="goods_item")
     model_number = models.CharField(max_length=100)
     type_of_good = models.CharField(max_length=100, choices=type_of_good_options)
     urgent = models.CharField(max_length=10, choices=urgency_options, default="not_urgent")
