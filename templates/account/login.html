@@ -15,6 +15,10 @@
                   </h1>
                   <form class="space-y-4 md:space-y-6" method="post">
                     {% csrf_token %}
+                    {# show non-field errors from the login form (e.g. invalid credentials, email not verified) #}
+                    {% if form.non_field_errors %}
+                        <div class="text-sm text-red-600">{{ form.non_field_errors }}</div>
+                    {% endif %}
                     {% render_form_fields form "login" "password" "remember" %}
                     <div class="flex items-center flex-col gap-2">
                         <input type="submit" name="submit" value="Sign In" class="w-full btn btn-primary btn-sm" id="submit-id-submit"></input>

@@ -1,11 +1,12 @@
-{% extends "page/session_base.html" %}
+{% extends "../page/session_navbar.html" %}
+{% load static %}
 {% load render_table from django_tables2 %}
 {% load form_tags %}
 
 {% block page %}
-<div class="w-full max-w-2xl mx-auto p-6">
+<div class="h-full w-full max-w-2xl mx-auto p-6">
     <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6">Create New GRN</h2>
+        <h2 class="text-2xl font-bold mb-6 text-center">Create New GRN</h2>
         
         <form method="post" class="space-y-6">
             {% csrf_token %}
@@ -18,10 +19,21 @@
                 </div>
             {% endif %}
 
-            {% render_form_fields form %}
-            
+            {{  form }}
+            <div id="formset-container" data-prefix="{{ formset.prefix }}">
+                {{ formset.management_form }}
+                {% for f in formset %}
+                <h2 class="text-2xl text-center">Goods Item</h2>
+                {{f}}
+                {% endfor %}
+            </div>
+            <div>
+                <button type="button" id="add-form-btn" class="bg-sky-600 hover:bg-sky-700 text-white font py-2 px-6 rounded">
+                    Add goods item
+                </button>
+            </div>
             <div class="flex gap-3 pt-4">
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded">
+                <button type="submit" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-6 rounded hover:cursor-pointer">
                     Create GRN
                 </button>
                 <a href="{% url 'grn:grn_management' %}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded inline-block">
@@ -29,6 +41,16 @@
                 </a>
             </div>
         </form>
+
+        <div id="empty-form-template" class="hidden">
+            <div class="form-item mb-4 p-4 ">
+                <h2 class="text-2xl text-center">Goods Item</h2>
+                {{ formset.empty_form|escape }}
+            </div>
+        </div>
     </div>
 </div>
 {% endblock page %}
+{% block scripts %}
+<script src="{% static 'js/forms.js' %}"></script>
+{% endblock scripts%}

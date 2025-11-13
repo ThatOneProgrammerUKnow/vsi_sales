@@ -9,10 +9,14 @@ from apps.shared.base_models import BaseModel
 class Customer(BaseModel):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
-    branch = models.CharField(max_length=100, null=True)
+    branch = models.CharField(max_length=100, null=True, blank=True)
+    farm = models.CharField(max_length=100, null = True, blank=True)
 
     def __str__(self):
-        return f'{self.name} {self.branch}'
+        if self.branch:
+            return f'{self.name} {self.branch}'
+        else: 
+            return self.name
 
 # ====================| Contact persons | ==================== #
 class ContactPerson(BaseModel):
@@ -22,14 +26,17 @@ class ContactPerson(BaseModel):
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
 
     def __str__(self):
-        return f'{self.name} from {self.Customer.name} {self.cusomer.branch}'
+        if self.customer.branch:
+            return f'{self.name} at {self.customer.name} {self.customer.branch}'
+        else:
+            return f'{self.name} at {self.customer.name}'
 
 # ====================| GRN Class | ==================== #
 class GRN(BaseModel):
     # Created automatically when the grn form is filled in, but also posible to insert another grn_number manually. 
     grn_number = models.CharField(max_length=20, unique=True, primary_key=True)
     date_returned = models.DateField()
-    customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
+    contact_person = models.ForeignKey(ContactPerson, on_delete=models.PROTECT)
 
     def __str__(self):
         return f'GRN {self.grn_number} returned on {self.date_returned}'
@@ -84,24 +91,25 @@ class GoodsItem(BaseModel):
     grn = models.ForeignKey(GRN, on_delete=models.PROTECT, db_index=True)
     model_number = models.CharField(max_length=100)
     type_of_good = models.CharField(max_length=100, choices=type_of_good_options)
-    urgency = models.CharField(max_length=50, choices=urgency_options, default="not_urgent")
+    urgent = models.CharField(max_length=10, choices=urgency_options, default="not_urgent")
 
     # Description 
-    status = models.CharField(max_length=50, choices=status_options)
-    location = models.CharField(max_length=100, choices=location_options)
-    reason_for_return = models.CharField(choices=reason_for_return_options)
+    status = models.CharField(max_length=50, choices=status_options, default='awaiting_request')
+    location = models.CharField(max_length=100, choices=location_options, default='awaiting_request')
+    reason_for_return = models.CharField(max_length = 50, choices=reason_for_return_options, default='awaiting_request')
     credit_request_reason = models.TextField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    
 
     # Numbers
-    job_card_number = models.CharField(max_length=100)
+    job_card_number = models.CharField(max_length=100, blank=True, null=True)
     report_quote_number = models.CharField(max_length=100, blank=True, null=True)
-    customer_order_number = models.CharField(max_length=100)
+    customer_order_number = models.CharField(max_length=100, blank=True, null=True)
     invoice_credit_number = models.CharField(max_length=100, blank=True, null=True)
-    dispatch_note = models.CharField(max_length=100)
+    dispatch_note = models.CharField(max_length=100, blank=True, null=True)
     invoice_credit_value = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     # Dates
-    date_returned = models.DateField()
     credit_passed_date = models.DateField(blank=True, null=True)
     original_invoice_date = models.DateField(blank=True, null=True)
 

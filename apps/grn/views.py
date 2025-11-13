@@ -3,14 +3,13 @@ from django.views.generic import TemplateView, CreateView
 from django.urls import reverse_lazy
 from apps.shared.base_views import BaseSessionViewMixin, SingleTableViewBase
 from django.views.generic import TemplateView
+from django.forms import formset_factory
+
 from .models import GRN, Customer, GoodsItem
 from .tables import GRNTable, CustomerTable, GoodsItemTable
-from .forms import GRNForm, CustomerForm
+from .forms import GRNForm, CustomerForm, GoodsFormset
 
-
-def goods(request):
-    return render(request, 'grn/goods.html')
-
+#===# Class based views #===#
 class GrnList(SingleTableViewBase, BaseSessionViewMixin, TemplateView):
     template_name = 'grn/grn_list.html'
     menu_slug = 'grn_management'
@@ -25,6 +24,28 @@ class CreateGrnView(BaseSessionViewMixin, CreateView):
     template_name = 'grn/grn_form.html'
     menu_slug = 'grn_management'
     success_url = reverse_lazy('grn:grn_management')
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        
+        if self.request.POST:
+            data['formset'] = GoodsFormset(self.request.POST, instance=self.object)
+        else:
+            data['formset'] = GoodsFormset(instance=self.object)
+        
+        return data
+    
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context['formset']
+        if form.is_valid() and formset.is_valid():
+            self.object = form.save()
+            formset.instance = self.object
+            formset.save()
+            return super().form_valid(form)
+        else:
+            return self.form_invalid(form)
+
 
 
 class CustomerList(SingleTableViewBase, BaseSessionViewMixin, TemplateView):
@@ -49,3 +70,8 @@ class GoodsItemList(SingleTableViewBase, BaseSessionViewMixin, TemplateView):
     model = GoodsItem
     table_class = GoodsItemTable
     paginate_by = 20
+
+#===# Fuhnction based views #===#
+def goods(request):
+    return render(request, 'grn/goods.html')
+
