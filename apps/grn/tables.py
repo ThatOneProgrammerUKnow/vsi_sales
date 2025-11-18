@@ -48,10 +48,19 @@ class GRNTable(tables.Table):
 
 
 class CustomerTable(tables.Table):
+    expand = TemplateColumn(
+        template_code="""
+        <a  
+        type='button'  
+        class='btn btn-sm font-medium' 
+        href="{% url  'grn:contact_persons' record.pk %}"> 
+        View more</a>
+        """,
+        verbose_name="Actions"
+    )
     class Meta:
         model = Customer
 
-        
         exclude = ("id", "updated_at", "created_at")
 
         attrs = {

@@ -41,3 +41,6 @@ class CustomerForm(forms.ModelForm):
                 'placeholder': 'Branch (optional)'
             }),
         }
+
+
+

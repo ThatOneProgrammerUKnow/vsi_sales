@@ -23,6 +23,7 @@ class ContactPerson(BaseModel):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     surname = models.CharField(max_length=100)
+    email = models.EmailField()
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
 
     def __str__(self):

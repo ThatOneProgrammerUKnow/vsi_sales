@@ -41,12 +41,13 @@ hx-headers='{"X-CSRFToken": {{ csrf_token }}}'>
     {% endblock header %}
 
     
-    <div class="">
-        {% block content %}
-        {% endblock content %}
-        {% block page %}
-        {% endblock page %}
-    </div>
+    {% block content %}
+    {% endblock content %}
+    {% block page %}
+    {% endblock page %}
+    {% block modal %}
+    {% endblock modal %}
+
     {% block scripts %}
     {% endblock scripts %}
 </form>

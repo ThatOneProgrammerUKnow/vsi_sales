@@ -5,7 +5,7 @@ from apps.shared.base_views import BaseSessionViewMixin, SingleTableViewBase
 from django.views.generic import TemplateView
 from django.views import View
 
-from .models import GRN, Customer, GoodsItem
+from .models import GRN, Customer, GoodsItem, ContactPerson
 from .tables import GRNTable, CustomerTable, GoodsItemTable
 from .forms import GRNForm, CustomerForm, GoodsFormset
 
@@ -79,8 +79,19 @@ class CreateCustomerView(BaseSessionViewMixin, CreateView):
     model = Customer
     form_class = CustomerForm
     template_name = 'grn/customer_form.html'
-    menu_slug = 'communication_log'
+    menu_slug = 'create_customer'
     success_url = reverse_lazy('grn:customer_management')
+
+class ContactPersonList(CustomerList):
+    def get_context_data(self, **kwargs):
+        customer_id = self.kwargs.get("customer_id")
+        context = super().get_context_data(**kwargs)
+        contact_persons = ContactPerson.objects.filter(customer__id=customer_id)
+        context["contact_persons"] = contact_persons
+        return context
+    
+
+
 
 #===# Goods #===#
 class GoodsItemList(SingleTableViewBase, BaseSessionViewMixin, TemplateView):
@@ -90,7 +101,6 @@ class GoodsItemList(SingleTableViewBase, BaseSessionViewMixin, TemplateView):
     table_class = GoodsItemTable
     paginate_by = 20
 
-#===# Function based views #===#
 def goods(request):
     return render(request, 'grn/goods.html')
 
