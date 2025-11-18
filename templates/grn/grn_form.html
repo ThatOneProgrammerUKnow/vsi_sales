@@ -22,9 +22,9 @@
             {{  form }}
             <div id="formset-container" data-prefix="{{ formset.prefix }}">
                 {{ formset.management_form }}
-                {% for f in formset %}
+                {% for form in formset %}
                 <h2 class="text-2xl text-center">Goods Item</h2>
-                {{f}}
+                {{form}}
                 {% endfor %}
             </div>
             <div>
@@ -43,7 +43,7 @@
         </form>
 
         <div id="empty-form-template" class="hidden">
-            <div class="form-item mb-4 p-4 ">
+            <div class="form-item">
                 <h2 class="text-2xl text-center">Goods Item</h2>
                 {{ formset.empty_form|escape }}
             </div>

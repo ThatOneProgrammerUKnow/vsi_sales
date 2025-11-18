@@ -43,10 +43,10 @@
                     <li><a class="btn  font-medium text-sky-800 shadow-[1px_1px_0.5px_0.5px_rgb(0,0,0,0.25)] hover:bg-gray-200
                         {% if menu_slug == 'goods'%}bg-gray-200 translate-y-[1px]{% endif %}"
                         href=" {% url 'grn:goods' %}">Goods</a></li>
-                    {# Clients #}
+                    {# Customers #}
                     <li><a class="btn  font-medium text-sky-800 shadow-[1px_1px_0.5px_0.5px_rgb(0,0,0,0.25)] hover:bg-gray-200
-                        {% if menu_slug == 'clients'%}bg-gray-200 translate-y-[1px]{% endif %}"
-                        href="">Clients</a></li>
+                        {% if menu_slug == 'customer'%}bg-gray-200 translate-y-[1px]{% endif %}"
+                        href="{% url 'grn:customer_management' %}">Customers</a></li>
                 </ul>
             </nav>
         </div>
@@ -69,4 +69,4 @@
         </div>
         </dialog>
 </header>
-{% endblock %}
+{% endblock header %}

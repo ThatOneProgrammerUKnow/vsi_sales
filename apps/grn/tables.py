@@ -3,8 +3,18 @@ from django_tables2 import TemplateColumn
 from django.conf import settings
 from .models import GRN, Customer, GoodsItem
 
+# Override checkbox header
+class CheckBoxCustomColumn(tables.CheckBoxColumn):
+    @property
+    def header(self):
+        return self.verbose_name
 
 class GRNTable(tables.Table):
+    select = CheckBoxCustomColumn(
+        verbose_name="Select",
+        accessor="pk"
+        )
+
     contact = TemplateColumn(
         template_code="{{ record.contact_person.name }} {{ record.contact_person.surname }}",
         verbose_name="Contact Person"
@@ -34,22 +44,24 @@ class GRNTable(tables.Table):
             "tr":{"class":"h-1"},
             "td":{"class":"text-center"},
         }
+        sequence = ("select", "grn_number", "date_returned", "contact", "customer", "goods") 
 
 
 class CustomerTable(tables.Table):
     class Meta:
         model = Customer
-        fields = (
-            "serial_number",
-            "grn_number",
-            "model_number",
-            "customer",
-            "urgency",
-            "type",
-            "status",
-            "days_waiting",
-        )
-        exclude = ("id", "updated_at")
+
+        
+        exclude = ("id", "updated_at", "created_at")
+
+        attrs = {
+            "class": "table text-base table-pin-rows table-pin-cols",
+            "thead":{"class":"text-sky-900"},
+            "th":{"class":"text-center"},
+            "tbody":{"class":"text-sky-800 whitespace-nowrap"},
+            "tr":{"class":"h-1"},
+            "td":{"class":"text-center"},
+        }
 
 
 class GoodsItemTable(tables.Table):

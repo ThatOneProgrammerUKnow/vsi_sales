@@ -5,8 +5,17 @@
 <a href="{% url 'grn:customer_create' %}" class="btn btn-sm btn-primary">
     + Add New Customer
 </a>
+<a href="" class="btn btn-sm btn-primary">
+    - Remove Customer
+</a>
 {% endblock page_actions %}
 
 {% block page %} 
-    {% render_table table %}
+<form id="delete-customer" action="{% url 'grn:grn_delete' %}" method="GET">
+    <div class="m-9 p-4 bg-white shadow-[1px_0_2px_2px_rgb(0,0,0,0.25)] text-center rounded-xl flex-1">
+        <div class="overflow-x-scroll">
+            {% render_table table %}
+        </div>
+    </div>
+</form>
 {% endblock page %}

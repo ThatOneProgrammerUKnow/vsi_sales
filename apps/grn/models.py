@@ -121,4 +121,4 @@ class GoodsItem(BaseModel):
     
 
     def __str__(self):
-        return f"{self.serial_number} - {self.customer.name} ({self.type_of_good})"
+        return f"{self.serial_number} - {self.grn.contact_person.customer.name} ({self.type_of_good})"
