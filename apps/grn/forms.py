@@ -48,7 +48,7 @@ class CustomerForm(forms.ModelForm):
 class ContactPersonForm(forms.ModelForm):
     class Meta:
         model = ContactPerson
-        exclude = ['id', 'customer', 'updated_at']
+        fields = ['name', 'surname', 'email']
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -63,6 +63,10 @@ class ContactPersonForm(forms.ModelForm):
                 'placeholder': 'Contact Email'
             }),
         }
+
+class AddContactPersonForm(ContactPersonForm):
+    class Meta(ContactPersonForm.Meta):
+        fields = ContactPersonForm.Meta.fields + ['customer']
 
 
 

@@ -1,20 +1,26 @@
 {% extends "../page/session_navbar.html" %}
 {% block content %}
 <div class="flex justify-center">
-    <form method="POST" action="{% url 'grn:grn_delete' %}"
+    <form method="POST"
     class="w-2xs bg-white rounded-2xl p-8">
         {% csrf_token %}
+        {% if object %}
+        <p class="text-center">Are you sure you want to delete {{ object }}?</p>
+        {% else %}
         <p class="text-center">Are you sure you want to delete these items?</p>
         <ul class="list-disc">
-            {% for grn in selected_grns %}
-            <input type="hidden" name="select" value="{{ grn }}">
-            <li class="text-center mb-1">Grn: {{ grn }}</li>
+            {% for item in selected_items %}
+            <input type="hidden" name="select" value="{{ item }}">
+            <li class="text-center mb-1">Grn: {{ item }}</li>
             {% endfor %}
         </ul>
+        {% endif %}
+
         <div class="flex flex-row justify-around  mt-2.5">
             <input type="submit" value="Confirm" name="confirm" class="btn btn-primary">
             <a href="{% url 'grn:grn_management' %}" class="btn btn-primary">Cancel</a>
         </div>
+        
     </form>
 </div>
 {% endblock content %}

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, CreateView
+from django.views.generic import TemplateView, CreateView, DeleteView
 from django.urls import reverse_lazy
 from apps.shared.base_views import BaseSessionViewMixin, SingleTableViewBase
 from django.views.generic import TemplateView
@@ -7,7 +7,7 @@ from django.views import View
 
 from .models import GRN, Customer, GoodsItem, ContactPerson
 from .tables import GRNTable, CustomerTable, GoodsItemTable
-from .forms import GRNForm, CustomerForm, GoodsFormset, ContactPersonForm
+from .forms import GRNForm, CustomerForm, GoodsFormset, ContactPersonForm, AddContactPersonForm
 
 #=====# Class based views #=====#
 #===# Grn management #===#
@@ -54,7 +54,7 @@ class DeleteGrn(View):
         selected_grns = request.GET.getlist("select")
 
         context = {
-            "selected_grns": selected_grns
+            "selected_items": selected_grns
         }
         return render(request, "grn/confirm_delete.html", context)
 
@@ -77,15 +77,9 @@ class CustomerList(SingleTableViewBase, BaseSessionViewMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["show_contacts_modal"] = "False"
-        return context
+        context["customer_id"] = 1
 
-class ContactPersonList(CustomerList):
-    def get_context_data(self, **kwargs):
-        customer_id = self.kwargs.get("customer_id")
-        context = super().get_context_data(**kwargs)
-        contact_persons = ContactPerson.objects.filter(customer__id=customer_id)
-        context["contact_persons"] = contact_persons
-        context["show_contacts_modal"] = "True"
+        print(f'\n\n\nThis is the Customer List view context\n\n\n{context["customer_id"]}')
         return context
 
 class CreateCustomerView(BaseSessionViewMixin, CreateView):
@@ -127,17 +121,42 @@ class CreateCustomerView(BaseSessionViewMixin, CreateView):
         else:
             return self.form_invalid(customer_form)
 
-
-
- 
-
+class DeleteCustomer(DeleteView):
+    model = Customer
+    template_name = "grn/confirm_delete.html"
+    success_url = reverse_lazy("grn:customer_management")
     
 
 
+class ContactPersonList(CustomerList):
+    def get_context_data(self, **kwargs):
+        customer_id = self.kwargs.get("customer_id")
+        context = super().get_context_data(**kwargs)
+        contact_persons = ContactPerson.objects.filter(customer__id=customer_id)
+        context["contact_persons"] = contact_persons
+        context["show_contacts_modal"] = "True"
+        context["customer_id"] = customer_id
+        print(f'\n\n\nThis is the Contact Person List view context\n\n\n{context["customer_id"]}')
+
+        return context
+
+class DeleteContactPerson(DeleteView):
+    model = ContactPerson
+    template_name = "grn/confirm_delete.html"
+    success_url = reverse_lazy("grn:customer_management")
+
+
+
+class AddContactPerson(CreateView):
+    model = ContactPerson
+    form_class = AddContactPersonForm
+    template_name = 'grn/add_contact_person_form.html'
+    menu_slug = 'add_contact_person'
+    success_url = reverse_lazy('grn:customer_management')
 
 #===# Goods #===#
 class GoodsItemList(SingleTableViewBase, BaseSessionViewMixin, TemplateView):
-    template_name = 'grn/goods.html'
+    template_name = 'grn/goods_list.html'
     menu_slug = 'goods'
     model = GoodsItem
     table_class = GoodsItemTable

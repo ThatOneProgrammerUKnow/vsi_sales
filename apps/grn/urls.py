@@ -11,6 +11,11 @@ urlpatterns = [
     path('goods/', views.GoodsItemList.as_view(), name='goods'),
 
     path('customer-management/', views.CustomerList.as_view(), name='customer_management'),
-    path('contact_persons/<int:customer_id>/', views.ContactPersonList.as_view(), name='contact_persons'),
     path('customer/new/', views.CreateCustomerView.as_view(), name='customer_create'),
+    path('customer/<int:pk>/delete/', views.DeleteCustomer.as_view(), name='delete_customer'),
+
+    path('contact_persons/<int:customer_id>/', views.ContactPersonList.as_view(), name='contact_persons'),
+    path('contact_person', views.AddContactPerson.as_view(), name="add_contact_person"),
+    path('contact-person/<int:pk>/delete/', views.DeleteContactPerson.as_view(), name='delete_contact_person'),
+    
 ]

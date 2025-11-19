@@ -6,16 +6,13 @@
 <a href="{% url 'grn:customer_create' %}" class="btn btn-sm btn-primary">
     + Add New Customer
 </a>
-<a href="" class="btn btn-sm btn-primary">
+<a href="{% url 'grn:add_contact_person' %}" class="btn btn-sm btn-primary">
     + Add New Contact Person
-</a>
-<a href="" class="btn btn-sm btn-primary">
-    - Remove Customer
 </a>
 {% endblock page_actions %}
 
 {% block page %} 
-<form id="delete-customer" action="{% url 'grn:grn_delete' %}" method="GET">
+<form id="delete-customer"  method="GET">
     <div class="m-9 p-4 bg-white shadow-[1px_0_2px_2px_rgb(0,0,0,0.25)] text-center rounded-xl flex-1">
         <div class="overflow-x-scroll">
             {% render_table table %}
@@ -23,6 +20,9 @@
     </div>
 </form>
 
+
+{% comment %} Expand Modal {% endcomment %}
+{% if customer_id %}
 <dialog id="actions_customer" class="modal">
   <div class="modal-box fixed top-[5%] w-min-fit
   ">
@@ -30,8 +30,16 @@
       <a href="{% url 'grn:customer_management' %}" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</a>
     </form>
     <h3 class="text-lg font-bold">Contact Persons</h3>
-
+       <div class="flex justify-around m-2">
+            <a href="{% url 'grn:delete_customer' customer_id %}" class="bg-sky-700 hover:bg-sky-800 text-xs text-white py-1 px-2 rounded">
+                Remove Customer
+            </a>
+            <a href="" class="bg-sky-700 hover:bg-sky-800 text-xs text-white py-1 px-2 rounded">
+                Edit Customer
+            </a>
+        </div>
     {% for contact in contact_persons %}
+ 
         <hr class="mt-3 mb-3">
         <div class="flex flex-row justify-evenly">
             <ul class="text-left flex flex-col flex-center">
@@ -45,9 +53,21 @@
                 <li>{{ contact.email }}</li>
             </ul>
         </div>
+        <div class="flex justify-around m-2">
+            <a href="{% url 'grn:delete_contact_person' contact.id %}" class="bg-gray-200 hover:bg-gray-300 text-xs text-sky-900 py-1 px-2 rounded">
+                Remove Contact
+            </a>
+            <a href="" class="bg-gray-200 hover:bg-gray-300 text-xs text-sky-900 py-1 px-2 rounded">
+                Edit Contact
+            </a>
+        </div>
+   
     {% endfor %}
   </div>
 </dialog>
+{% endif %}
+
+
 <input type="hidden" value="{{ show_contacts_modal }}" id="show_contacts_var">
 {% endblock page %}
 {% block scripts %}

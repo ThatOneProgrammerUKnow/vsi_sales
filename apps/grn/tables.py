@@ -48,6 +48,7 @@ class GRNTable(tables.Table):
 
 #--->>> Customer table 
 class CustomerTable(tables.Table):
+    pk = tables.Column(accessor="pk", visible=False)
     expand = TemplateColumn(
         template_code="""
         <a  
@@ -55,9 +56,9 @@ class CustomerTable(tables.Table):
         type='button'  
         class='btn btn-sm font-medium' 
         href="{% url  'grn:contact_persons' record.pk %}"> 
-        View more</a>
+        Expand</a>
         """,
-        verbose_name="Actions"
+        verbose_name="View More"
     )
     class Meta:
         model = Customer
@@ -73,7 +74,7 @@ class CustomerTable(tables.Table):
             "td":{"class":"text-center"},
         }
 
-
+#--->>> Goods table
 class GoodsItemTable(tables.Table):
     grn_number = tables.Column(accessor="grn__grn_number")
     customer_name = tables.Column(accessor="grn__customer__name")
@@ -81,4 +82,14 @@ class GoodsItemTable(tables.Table):
 
     class Meta:
         model = GoodsItem
-        exclude = ("id", "updated_at", "credit_request_reason")
+        fields = ["serial_number", "grn_number", "model_number", "customer_name", "urgency", "type", "status", "days_waiting"]
+
+        attrs = {
+            "class": "table text-base table-pin-rows table-pin-cols",
+            "thead":{"class":"text-sky-900"},
+            "th":{"class":"text-center"},
+            "tbody":{"class":"text-sky-800 whitespace-nowrap"},
+            "tr":{"class":"h-1"},
+            "td":{"class":"text-center"},
+        }
+
