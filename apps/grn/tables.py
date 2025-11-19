@@ -46,11 +46,12 @@ class GRNTable(tables.Table):
         }
         sequence = ("select", "grn_number", "date_returned", "contact", "customer", "goods") 
 
-
+#--->>> Customer table 
 class CustomerTable(tables.Table):
     expand = TemplateColumn(
         template_code="""
         <a  
+        id="view_contacts_modal"
         type='button'  
         class='btn btn-sm font-medium' 
         href="{% url  'grn:contact_persons' record.pk %}"> 

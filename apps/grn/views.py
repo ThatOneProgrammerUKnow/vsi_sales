@@ -74,6 +74,19 @@ class CustomerList(SingleTableViewBase, BaseSessionViewMixin, TemplateView):
     table_class = CustomerTable
     paginate_by = 20
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["show_contacts_modal"] = "False"
+        return context
+
+class ContactPersonList(CustomerList):
+    def get_context_data(self, **kwargs):
+        customer_id = self.kwargs.get("customer_id")
+        context = super().get_context_data(**kwargs)
+        contact_persons = ContactPerson.objects.filter(customer__id=customer_id)
+        context["contact_persons"] = contact_persons
+        context["show_contacts_modal"] = "True"
+        return context
 
 class CreateCustomerView(BaseSessionViewMixin, CreateView):
     model = Customer
@@ -117,13 +130,7 @@ class CreateCustomerView(BaseSessionViewMixin, CreateView):
 
 
  
-class ContactPersonList(CustomerList):
-    def get_context_data(self, **kwargs):
-        customer_id = self.kwargs.get("customer_id")
-        context = super().get_context_data(**kwargs)
-        contact_persons = ContactPerson.objects.filter(customer__id=customer_id)
-        context["contact_persons"] = contact_persons
-        return context
+
     
 
 
