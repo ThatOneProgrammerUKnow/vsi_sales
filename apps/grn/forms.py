@@ -1,9 +1,10 @@
 from django import forms
 from django.utils import timezone
-from .models import GRN, Customer, GoodsItem
+from .models import GRN, Customer, GoodsItem, ContactPerson
 from django.forms import inlineformset_factory
 
-
+#--->>> GRN Form 
+# GRN Part
 class GRNForm(forms.ModelForm):
     class Meta:
         model = GRN
@@ -19,7 +20,8 @@ class GRNForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if not self.instance.pk:
             self.fields['date_returned'].initial = timezone.now().date()
-
+            
+# Goods formset
 class GoodsItemForm(forms.ModelForm):
     class Meta:
         model = GoodsItem
@@ -27,6 +29,7 @@ class GoodsItemForm(forms.ModelForm):
 
 GoodsFormset = inlineformset_factory(GRN, GoodsItem, form=GoodsItemForm, extra=1)
 
+#--->>> Customer form
 class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
@@ -41,6 +44,26 @@ class CustomerForm(forms.ModelForm):
                 'placeholder': 'Branch (optional)'
             }),
         }
+# Contact Person formset
+class ContactPersonForm(forms.ModelForm):
+    class Meta:
+        model = ContactPerson
+        exclude = ['id', 'customer', 'updated_at']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Contact Name'
+            }),
+            'surname': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Contact Surname'
+            }),
+            'email': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Contact Email'
+            }),
+        }
+
 
 
 

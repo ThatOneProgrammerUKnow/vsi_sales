@@ -7,7 +7,7 @@ from django.views import View
 
 from .models import GRN, Customer, GoodsItem, ContactPerson
 from .tables import GRNTable, CustomerTable, GoodsItemTable
-from .forms import GRNForm, CustomerForm, GoodsFormset
+from .forms import GRNForm, CustomerForm, GoodsFormset, ContactPersonForm
 
 #=====# Class based views #=====#
 #===# Grn management #===#
@@ -82,6 +82,41 @@ class CreateCustomerView(BaseSessionViewMixin, CreateView):
     menu_slug = 'create_customer'
     success_url = reverse_lazy('grn:customer_management')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context["customer_form"] = CustomerForm(self.request.POST, prefix="customer")
+            context["contact_person_form"] = ContactPersonForm(self.request.POST)
+        else:
+            context["customer_form"] = CustomerForm(prefix="customer")
+            context["contact_person_form"] = ContactPersonForm()
+        return context
+
+    def form_valid(self, customer_form):
+        context = self.get_context_data()
+        customer_form = context["customer_form"]
+        contact_form = context["contact_person_form"]
+
+
+        if customer_form.is_valid() and contact_form.is_valid():
+            # Save the customer
+            self.object = customer_form.save()
+            print(customer_form)
+            print(f"Contact: {contact_form}")
+
+            # Save the contact person, attach FK
+            contact_person = contact_form.save(commit=False)
+            contact_person.customer = self.object
+            contact_person.save()
+
+            return super().form_valid(customer_form)
+
+        else:
+            return self.form_invalid(customer_form)
+
+
+
+ 
 class ContactPersonList(CustomerList):
     def get_context_data(self, **kwargs):
         customer_id = self.kwargs.get("customer_id")
