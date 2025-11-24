@@ -3,6 +3,8 @@ from django.db import models
 from django.db import models
 from apps.shared.base_models import BaseModel
 
+from datetime import date
+
 
 
 # ====================| Customers | ==================== #
@@ -24,13 +26,13 @@ class ContactPerson(BaseModel):
     name = models.CharField(max_length=100)
     surname = models.CharField(max_length=100)
     email = models.EmailField()
-    customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
+    company = models.ForeignKey(Customer, on_delete=models.PROTECT)
 
     def __str__(self):
-        if self.customer.branch:
-            return f'{self.name} at {self.customer.name} {self.customer.branch}'
+        if self.company.branch:
+            return f'{self.name} at {self.company.name} {self.company.branch}'
         else:
-            return f'{self.name} at {self.customer.name}'
+            return f'{self.name} at {self.company.name}'
 
 # ====================| GRN Class | ==================== #
 class GRN(BaseModel):
@@ -74,7 +76,7 @@ class GoodsItem(BaseModel):
     # The idea is that you can choose one of the most common types of goods, but also be able to add your own, 
     # when there is a unique case that something else is retured.
     type_of_good_options = [
-        ('motor', 'motor'),
+        ('motor', 'Motor'),
         ('vsd', 'VSD'),
         ('other', 'Other'),
     ]
@@ -83,6 +85,7 @@ class GoodsItem(BaseModel):
         ('credit', 'Credit'),
         ('test_and_report', 'Test & Report'),
         ('return', 'Return'),
+        ('other', 'Other')
     ]
 
 # Attributes --------------------------------------------------------------------------------------------#
@@ -96,8 +99,8 @@ class GoodsItem(BaseModel):
 
     # Description 
     status = models.CharField(max_length=50, choices=status_options, default='awaiting_request')
-    location = models.CharField(max_length=100, choices=location_options, default='awaiting_request')
-    reason_for_return = models.CharField(max_length = 50, choices=reason_for_return_options, default='awaiting_request')
+    location = models.CharField(max_length=100, choices=location_options, default='grn_section')
+    reason_for_return = models.CharField(max_length = 50, choices=reason_for_return_options, default='other')
     credit_request_reason = models.TextField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     
@@ -115,11 +118,15 @@ class GoodsItem(BaseModel):
     original_invoice_date = models.DateField(blank=True, null=True)
 
     # Duration (stored as integers, assuming days)
-    days_in_warehouse = models.IntegerField(blank=True, null=True)
+    @property
+    def days_in_warehouse(self):
+        return date.today() - self.grn.date_returned
+
+
     days_awaiting_us = models.IntegerField(blank=True, null=True)
     days_awaiting_client = models.IntegerField(blank=True, null=True)
 
     
 
     def __str__(self):
-        return f"{self.serial_number} - {self.grn.contact_person.customer.name} ({self.type_of_good})"
+        return f"{self.serial_number} - {self.grn.contact_person.company.name} ({self.type_of_good})"

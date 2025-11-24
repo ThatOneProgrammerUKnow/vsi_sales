@@ -33,15 +33,19 @@ GoodsFormset = inlineformset_factory(GRN, GoodsItem, form=GoodsItemForm, extra=1
 class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
-        fields = ['name', 'branch']
+        fields = ['name', 'branch', 'farm']
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Customer Name'
+                'placeholder': 'Company Name'
             }),
             'branch': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Branch (optional)'
+            }),
+            'farm': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Farm (optional)'
             }),
         }
 # Contact Person formset
@@ -66,7 +70,7 @@ class ContactPersonForm(forms.ModelForm):
 
 class AddContactPersonForm(ContactPersonForm):
     class Meta(ContactPersonForm.Meta):
-        fields = ContactPersonForm.Meta.fields + ['customer']
+        fields = ContactPersonForm.Meta.fields + ['company']
 
 
 

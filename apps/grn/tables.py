@@ -77,8 +77,10 @@ class CustomerTable(tables.Table):
 #--->>> Goods table
 class GoodsItemTable(tables.Table):
     grn_number = tables.Column(accessor="grn__grn_number")
-    customer_name = tables.Column(accessor="grn__customer__name")
-
+    customer_name = TemplateColumn(template_code=
+    """{{ record.grn.contact_person.company.name }}
+    {% if record.grn.contact_person.company.branch %}{{ record.grn.contact_person.company.branch }}{% endif %}""",
+      verbose_name="Customer")
 
     class Meta:
         model = GoodsItem

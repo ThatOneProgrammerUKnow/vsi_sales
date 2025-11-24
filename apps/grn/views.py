@@ -77,9 +77,8 @@ class CustomerList(SingleTableViewBase, BaseSessionViewMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["show_contacts_modal"] = "False"
-        context["customer_id"] = 1
+        context["customer_id"] = 0
 
-        print(f'\n\n\nThis is the Customer List view context\n\n\n{context["customer_id"]}')
         return context
 
 class CreateCustomerView(BaseSessionViewMixin, CreateView):
@@ -113,7 +112,7 @@ class CreateCustomerView(BaseSessionViewMixin, CreateView):
 
             # Save the contact person, attach FK
             contact_person = contact_form.save(commit=False)
-            contact_person.customer = self.object
+            contact_person.company = self.object
             contact_person.save()
 
             return super().form_valid(customer_form)
@@ -132,11 +131,10 @@ class ContactPersonList(CustomerList):
     def get_context_data(self, **kwargs):
         customer_id = self.kwargs.get("customer_id")
         context = super().get_context_data(**kwargs)
-        contact_persons = ContactPerson.objects.filter(customer__id=customer_id)
+        contact_persons = ContactPerson.objects.filter(company__id=customer_id)
         context["contact_persons"] = contact_persons
         context["show_contacts_modal"] = "True"
         context["customer_id"] = customer_id
-        print(f'\n\n\nThis is the Contact Person List view context\n\n\n{context["customer_id"]}')
 
         return context
 
@@ -162,6 +160,30 @@ class GoodsItemList(SingleTableViewBase, BaseSessionViewMixin, TemplateView):
     table_class = GoodsItemTable
     paginate_by = 20
 
-def goods(request):
-    return render(request, 'grn/goods.html')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["expand_goods_modal"] = "False"
+
+        return context
+
+
+class ExpandGoods(GoodsItemList):
+    def get_context_data(self, **kwargs):
+        goods_item_id = self.kwargs.get("goods_item_id")
+        context = super().get_context_data(**kwargs)
+        context["expand_goods_modal"] = "True"
+        goods_item = GoodsItem.objects.get(id=goods_item_id)
+        context["goods_item"] = goods_item
+        
+        return context
+    
+class DeleteGoodsItem(DeleteView):
+    model = GoodsItem
+    template_name = "grn/confirm_delete.html"
+    success_url = reverse_lazy("grn:goods")
+    
+
+
+
 
