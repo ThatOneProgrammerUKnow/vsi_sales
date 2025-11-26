@@ -2,7 +2,7 @@
 module.exports = {
   content: [
     '**/*.{html,js}',
-    './weg_solutions/settings.py',
+    './healthy_herbs/settings.py',
     './application_processors/*.py',
     '**/tables.py'
   ],

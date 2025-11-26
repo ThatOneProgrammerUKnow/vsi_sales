@@ -3,7 +3,7 @@
 # Run this the first time to set up the project
 # Make sure you have a PostgreSQL database running in docker with a user 'postgres' and password 'postgres
 dev-init:
-	docker exec -i postgres psql -U postgres -c "create database weg_solutions;"
+	docker exec -i postgres psql -U postgres -c "create database healthy_herbs;"
 
 install-uv:
 	pip install uv
@@ -32,5 +32,5 @@ upgrade_user email:
 
 
 celery:
-	watchfiles --filter python 'celery -A weg_solutions worker --loglevel=INFO'
+	watchfiles --filter python 'celery -A healthy_herbs worker --loglevel=INFO'
 

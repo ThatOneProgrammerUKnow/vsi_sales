@@ -1,6 +1,6 @@
 import uuid
 from django.contrib.auth.models import AbstractUser
-from weg_solutions.base_models import BaseModel
+from healthy_herbs.base_models import BaseModel
 from django.db import models
 
 

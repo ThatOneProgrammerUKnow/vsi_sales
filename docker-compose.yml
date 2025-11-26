@@ -13,7 +13,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     networks:
-      - weg_solutions
+      - healthy_herbs
 
 
   redis:
@@ -21,7 +21,7 @@ services:
     ports:
       - 6379:6379
     networks:
-      - weg_solutions
+      - healthy_herbs
 
 
 volumes:
@@ -29,5 +29,5 @@ volumes:
   postgres_data:
 
 networks:
-  weg_solutions:
+  healthy_herbs:
     driver: bridge
