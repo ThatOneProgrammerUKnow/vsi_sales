@@ -78,7 +78,7 @@ class Order(BaseModel):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.date} {self.status}"
+        return f"Order number: {self.id}"
 
 
 class OrderItem(BaseModel):

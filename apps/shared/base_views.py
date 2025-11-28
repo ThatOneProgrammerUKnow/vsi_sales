@@ -1,4 +1,5 @@
 from django_tables2.views import SingleTableView
+from django.views.generic import CreateView
 
 class BaseSessionViewMixin:
     menu_slug = ""
@@ -13,4 +14,8 @@ class BaseSessionViewMixin:
         context["button_slug"] = self.button_slug
         context["cancel_url"] = self.cancel_url
         return context
-
+    
+class CustomCreateView(CreateView):
+    def form_valid(self, form):
+        form.instance.company = self.request.user.company  
+        return super().form_valid(form)

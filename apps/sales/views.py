@@ -1,16 +1,16 @@
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, CreateView, DeleteView
+from django.views.generic import TemplateView, DeleteView
 from django.urls import reverse_lazy
 from django.views import View
 from django_tables2 import SingleTableView
 
-from apps.shared.base_views import BaseSessionViewMixin
-from .models import Client, Product, Invoice, Order, OrderItem
+from apps.shared.base_views import BaseSessionViewMixin, CustomCreateView
+from .models import Client, Product, Invoice, Order, OrderItem, Status
 from .tables import ClientTable, ProductTable, InvoiceTable, OrderTable
-from .forms import ClientForm, ProductForm, OrderForm, InvoiceForm
+from .forms import ClientForm, ProductForm, OrderForm, InvoiceForm, StatusForm
 
 
-#=====# Client #=====#
+#=====# Tables #=====#
 #--->>> Client table
 class ClientListView(BaseSessionViewMixin, SingleTableView):
     model = Client
@@ -22,19 +22,7 @@ class ClientListView(BaseSessionViewMixin, SingleTableView):
         # Only show clients ders for the logged-in user's company
         return Client.objects.filter(company=self.request.user.company)
     
-#--->>> Create Client 
-class AddClientView(BaseSessionViewMixin, CreateView):
-    model = Client
-    form_class = ClientForm
-    template_name = "apps/sales/generic_form.html"
-    menu_slug = "client"
-    title_slug = "Add Client"
-    button_slug = "Add Client"
-    cancel_url = reverse_lazy("sales:client_table")
-    success_url = reverse_lazy("sales:order_table")
 
-
-#=====# Product #=====#
 #--->>> Product table
 class ProductListView(BaseSessionViewMixin, SingleTableView):
     model = Product
@@ -47,18 +35,7 @@ class ProductListView(BaseSessionViewMixin, SingleTableView):
         # Only show products for the logged-in user's company
         return Product.objects.filter(company=self.request.user.company)
     
-#--->>> Add Product
-class AddProductView(BaseSessionViewMixin, CreateView):
-    model = Product
-    form_class = ProductForm
-    template_name = "apps/sales/generic_form.html"
-    menu_slug = "product"
-    title_slug = "Add Product"
-    button_slug = "Add Product"
-    cancel_url = reverse_lazy("sales:product_table")
-    success_url = reverse_lazy("sales:order_table")
 
-#=====# Order #=====#
 #--->>> Order table
 class OrderListView(BaseSessionViewMixin, SingleTableView):
     model = Order
@@ -69,19 +46,7 @@ class OrderListView(BaseSessionViewMixin, SingleTableView):
     def get_queryset(self):
         # Only show orders for the logged-in user's company
         return Order.objects.filter(company=self.request.user.company)
-    
-#--->>> Create Order
-class CreateOrderView(BaseSessionViewMixin, CreateView):
-    model = Order
-    form_class = OrderForm
-    template_name = "apps/sales/generic_form.html"
-    menu_slug = "order"
-    title_slug = "Create Order"
-    button_slug = "Create Order"
-    cancel_url = reverse_lazy("sales:order_table")
-    success_url = reverse_lazy("sales:order_table")
 
-#=====# Invoice #=====#
 #--->>> Invoice table
 class InvoiceListView(BaseSessionViewMixin, SingleTableView):
     model = Invoice
@@ -92,9 +57,10 @@ class InvoiceListView(BaseSessionViewMixin, SingleTableView):
     def get_queryset(self):
         # Only show invoices for the logged-in user's company
         return Invoice.objects.filter(order__company=self.request.user.company)
-    
+
+#=====# Create Views #=====#
 #--->>> Create Invoice
-class CreateInvoiceView(BaseSessionViewMixin, CreateView):
+class CreateInvoiceView(BaseSessionViewMixin, CustomCreateView):
     model = Invoice
     form_class = InvoiceForm
     template_name = "apps/sales/generic_form.html"
@@ -102,5 +68,49 @@ class CreateInvoiceView(BaseSessionViewMixin, CreateView):
     title_slug = "Create Invoice"
     button_slug = "Create Invoice"
     cancel_url = reverse_lazy("sales:invoice_table")
+    success_url = reverse_lazy("sales:invoice_table")
+
+#--->>> Create Order
+class CreateOrderView(BaseSessionViewMixin, CustomCreateView):
+    model = Order
+    form_class = OrderForm
+    template_name = "apps/sales/generic_form.html"
+    menu_slug = "order"
+    title_slug = "Create Order"
+    button_slug = "Create Order"
+    cancel_url = reverse_lazy("sales:order_table")
+    success_url = reverse_lazy("sales:order_table")
+
+#--->>> Add Product
+class AddProductView(BaseSessionViewMixin, CustomCreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = "apps/sales/generic_form.html"
+    menu_slug = "product"
+    title_slug = "Add Product"
+    button_slug = "Add Product"
+    cancel_url = reverse_lazy("sales:product_table")
+    success_url = reverse_lazy("sales:product_table")
+
+#--->>> Create Client 
+class AddClientView(BaseSessionViewMixin, CustomCreateView):
+    model = Client
+    form_class = ClientForm
+    template_name = "apps/sales/generic_form.html"
+    menu_slug = "client"
+    title_slug = "Add Client"
+    button_slug = "Add Client"
+    cancel_url = reverse_lazy("sales:client_table")
+    success_url = reverse_lazy("sales:client_table")
+
+#--->>> Create Client 
+class AddStatusView(BaseSessionViewMixin, CustomCreateView):
+    model = Status
+    form_class = StatusForm
+    template_name = "apps/sales/generic_form.html"
+    menu_slug = "order"
+    title_slug = "Add Status"
+    button_slug = "Add Status"
+    cancel_url = reverse_lazy("sales:order_table")
     success_url = reverse_lazy("sales:order_table")
 

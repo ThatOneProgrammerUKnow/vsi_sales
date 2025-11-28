@@ -24,13 +24,13 @@ class Base(tables.Table):
 class ClientTable(Base):
     class Meta(Base.Meta):
         model = Client
-        exclude = ["id", "created_at", "updated_at"]
+        exclude = ["id", "created_at", "updated_at", "company"]
 
 #=====# Orders #=====#
 class OrderTable(Base):
     class Meta(Base.Meta):
         model = Order
-        exclude = ["company"]
+        exclude = ["company", "created_at", "updated_at"]
         sequence = ["id"]
 
 
@@ -38,7 +38,7 @@ class OrderTable(Base):
 class ProductTable(Base):
     class Meta(Base.Meta):
         model = Product
-        exclude = ["created_at", "updated_at"]
+        exclude = ["created_at", "updated_at", "company"]
 
 #=====# Invoice #=====#
 class InvoiceTable(Base):
