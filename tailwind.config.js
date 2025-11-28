@@ -2,7 +2,7 @@
 module.exports = {
   content: [
     '**/*.{html,js}',
-    './healthy_herbs/settings.py',
+    './vsi_business/settings.py',
     './application_processors/*.py',
     '**/tables.py'
   ],

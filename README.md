@@ -7,7 +7,7 @@ It is highly recommend that you run your database in a docker container. See the
 
 
 ```shell
-> docker run -d --name postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=healthy_herbs -e POSTGRES_USER=postgres
+> docker run -d --name postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=vsi_business -e POSTGRES_USER=postgres
 
 # Confirm the container is running. You should see a "postgres" container if you run
 > docker ps

@@ -1,5 +1,5 @@
 """
-URL configuration for healthy_herbs project.
+URL configuration for vsi_business project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.0/topics/http/urls/
@@ -19,7 +19,8 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import RedirectView
 
-from apps.accounts.views import LoginView, SignupView, DashboardView, logout_view
+from apps.accounts.views import LoginView, SignupView, logout_view
+from apps.sales.views import OrderListView
 
 urlpatterns = [
     path("",
@@ -37,5 +38,7 @@ urlpatterns = [
         name="redirect-to-login",
     ),
     path("admin/", admin.site.urls),
-    path("dashboard/", DashboardView.as_view(), name="dashboard"),
+
+    path("sales/", include("apps.sales.urls")),
+
 ]

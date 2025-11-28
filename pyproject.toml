@@ -37,7 +37,7 @@ dev = [
 
 [tool.pytest.ini_options]
 python_files = "tests.py test_*.py *_tests.py"
-addopts = "--ds=healthy_herbs.settings_test --reuse-db"
+addopts = "--ds=vsi_business.settings_test --reuse-db"
 
 [tool.ruff]
 exclude = [

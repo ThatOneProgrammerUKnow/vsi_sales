@@ -1,0 +1,12 @@
+{% extends "page/session_navbar.html" %}
+{% load render_table from django_tables2 %}
+
+{% block page_actions %}
+<a href="{% url 'sales:create_order' %}" class="btn btn-sm btn-primary">
+    + Create Order
+</a>
+{% endblock page_actions %}
+
+{% block content %}
+{% render_table table %}
+{% endblock content %}

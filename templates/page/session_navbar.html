@@ -8,14 +8,21 @@
                     
                  <h1 class="absolute left-5 text-lg  text-sky-800 font-bold">{{user.username}}</h1>
                         
-                <h1 class="text-4xl text-sky-800 font-bold">VSI - Healthy Herbs Admin Solution</h1>
+                <h1 class="text-4xl text-sky-800 font-bold">VSI - Sales</h1>
 
 
               
-    
-                {# Log out #}
-                <a href="{% url 'account_logout' %}" 
-                class="right-5 btn bnt-sm absolute font-bold shadow-[0_1px_0.5px_0.5px_rgb(0,0,0,0.1)] text-sky-900">Logout </a>
+                <div class="absolute right-5 flex flex-end">
+                    {# Admin Interface #}
+                    {% if is_superuser %}
+                        <a href="{% url 'admin:index' %}" 
+                        class="btn bnt-sm ml-4 font-bold shadow-[0_1px_0.5px_0.5px_rgb(0,0,0,0.1)] text-sky-900">Admin </a>
+                    {% endif %}
+
+                    {# Log out #}
+                    <a href="{% url 'account_logout' %}" 
+                    class="btn bnt-sm ml-4 font-bold shadow-[0_1px_0.5px_0.5px_rgb(0,0,0,0.1)] text-sky-900">Logout </a>
+                </div>
                 
             </div>
 
@@ -24,16 +31,23 @@
                 <ul class="flex justify-evenly">
                     {# Orders #}
                     <li><a class="btn  font-medium text-sky-800 shadow-[1px_1px_0.5px_0.5px_rgb(0,0,0,0.25)] hover:bg-gray-200
-                        {% if menu_slug == 'dashboard'%}bg-gray-200 translate-y-[1px]{% endif %}"
-                        href="{% url 'dashboard' %}">Orders</a></li>
+                        {% if menu_slug == 'order'%}bg-gray-200 translate-y-[1px]{% endif %}"
+                        href="{% url 'sales:order_table' %}">Orders</a></li>
+
+                    {# Invoices #}
+                    <li><a class="btn  font-medium text-sky-800 shadow-[1px_1px_0.5px_0.5px_rgb(0,0,0,0.25)] hover:bg-gray-200
+                        {% if menu_slug == 'invoice'%}bg-gray-200 translate-y-[1px]{% endif %}"
+                        href="{% url 'sales:invoice_table' %}">Invoices</a></li>
 
                     {# Clients #}
-                    <li><a class="btn t font-medium text-sky-800 shadow-[1px_1px_0.5px_0.5px_rgb(0,0,0,0.25)] hover:bg-gray-200"
-                        href="">Clients</a></li>
+                    <li><a class="btn t font-medium text-sky-800 shadow-[1px_1px_0.5px_0.5px_rgb(0,0,0,0.25)] hover:bg-gray-200
+                        {% if menu_slug == 'client'%}bg-gray-200 translate-y-[1px]{% endif %}"
+                        href="{% url 'sales:client_table' %}">Clients</a></li>
 
                     {# Products #}
-                    <li><a class="btn  font-medium text-sky-800 shadow-[1px_1px_0.5px_0.5px_rgb(0,0,0,0.25)] hover:bg-gray-200"
-                        href="">Products</a></li>
+                    <li><a class="btn  font-medium text-sky-800 shadow-[1px_1px_0.5px_0.5px_rgb(0,0,0,0.25)] hover:bg-gray-200
+                    {% if menu_slug == 'product'%}bg-gray-200 translate-y-[1px]{% endif %}"
+                        href="{% url 'sales:product_table' %}">Products</a></li>
 
 
                 </ul>

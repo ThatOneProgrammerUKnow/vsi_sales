@@ -1,5 +1,5 @@
 """
-ASGI config for healthy_herbs project.
+ASGI config for vsi_business project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "healthy_herbs.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "vsi_business.settings")
 
 application = get_asgi_application()
