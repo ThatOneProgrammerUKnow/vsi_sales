@@ -28,10 +28,23 @@ class ClientTable(Base):
 
 #=====# Orders #=====#
 class OrderTable(Base):
+    expand = TemplateColumn(
+        template_code="""
+        <a  
+        id="view_contacts_modal"
+        type='button'  
+        class='btn btn-sm font-medium' 
+        href="{% url  'sales:expand_order' record.id %}"> 
+        Expand</a>
+        """,
+        verbose_name="View More"
+    )
+    id = tables.Column(verbose_name="Order Number")
+
     class Meta(Base.Meta):
         model = Order
-        exclude = ["company", "created_at", "updated_at"]
-        sequence = ["id"]
+        fields = ["id", "date", "status", "client", "expand"]
+    
 
 
 #=====# Product #=====#

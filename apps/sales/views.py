@@ -1,13 +1,14 @@
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, DeleteView
+from django.views.generic import DeleteView, DetailView
 from django.urls import reverse_lazy
 from django.views import View
 from django_tables2 import SingleTableView
+from django_tables2.config import RequestConfig
 
 from apps.shared.base_views import BaseSessionViewMixin, CustomCreateView
 from .models import Client, Product, Invoice, Order, OrderItem, Status
 from .tables import ClientTable, ProductTable, InvoiceTable, OrderTable
-from .forms import ClientForm, ProductForm, OrderForm, InvoiceForm, StatusForm
+from .forms import ClientForm, ProductForm, OrderForm, InvoiceForm, StatusForm, OrderItemFormSet
 
 
 #=====# Tables #=====#
@@ -22,7 +23,6 @@ class ClientListView(BaseSessionViewMixin, SingleTableView):
         # Only show clients ders for the logged-in user's company
         return Client.objects.filter(company=self.request.user.company)
     
-
 #--->>> Product table
 class ProductListView(BaseSessionViewMixin, SingleTableView):
     model = Product
@@ -35,7 +35,6 @@ class ProductListView(BaseSessionViewMixin, SingleTableView):
         # Only show products for the logged-in user's company
         return Product.objects.filter(company=self.request.user.company)
     
-
 #--->>> Order table
 class OrderListView(BaseSessionViewMixin, SingleTableView):
     model = Order
@@ -46,6 +45,11 @@ class OrderListView(BaseSessionViewMixin, SingleTableView):
     def get_queryset(self):
         # Only show orders for the logged-in user's company
         return Order.objects.filter(company=self.request.user.company)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["show_modal"] = "False"
+        return context
 
 #--->>> Invoice table
 class InvoiceListView(BaseSessionViewMixin, SingleTableView):
@@ -70,16 +74,46 @@ class CreateInvoiceView(BaseSessionViewMixin, CustomCreateView):
     cancel_url = reverse_lazy("sales:invoice_table")
     success_url = reverse_lazy("sales:invoice_table")
 
-#--->>> Create Order
+#--->>> Create Order with Items (uses inline formset)
 class CreateOrderView(BaseSessionViewMixin, CustomCreateView):
     model = Order
     form_class = OrderForm
     template_name = "apps/sales/generic_form.html"
     menu_slug = "order"
     title_slug = "Create Order"
+    heading2_slug = "Products"
     button_slug = "Create Order"
+    button2_slug = "Add product"
     cancel_url = reverse_lazy("sales:order_table")
     success_url = reverse_lazy("sales:order_table")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context['formset'] = OrderItemFormSet(self.request.POST, instance=self.object)
+        else:
+            context['formset'] = OrderItemFormSet(instance=self.object)
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context['formset']
+        
+        if formset.is_valid():
+            self.object = form.save(commit=False)
+            self.object.company = self.request.user.company
+            self.object.save()
+            
+            formset.instance = self.object
+            items = formset.save(commit=False)
+            for item in items:
+                # Store unit price at checkout
+                item.price_at_checkout = item.product.price
+                item.save()
+            
+            return redirect(self.success_url)
+        else:
+            return self.form_invalid(form)
 
 #--->>> Add Product
 class AddProductView(BaseSessionViewMixin, CustomCreateView):
@@ -113,4 +147,29 @@ class AddStatusView(BaseSessionViewMixin, CustomCreateView):
     button_slug = "Add Status"
     cancel_url = reverse_lazy("sales:order_table")
     success_url = reverse_lazy("sales:order_table")
+
+
+#=====# Modal Views #=====#
+class ExpandView(BaseSessionViewMixin, DetailView):
+    model = Order
+    template_name = "apps/sales/order_table.html"
+    menu_slug = "order"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        order_items = OrderItem.objects.filter(order=self.object)
+        context["order_items"] = order_items
+        # Calculate total checkout price
+        total = sum(item.price_at_checkout * item.qty for item in order_items)
+        context["total_price"] = total
+        context["show_modal"] = "True"
+        # Also render the orders table on the detail page
+        queryset = Order.objects.filter(company=self.request.user.company)
+        table = OrderTable(queryset)
+        RequestConfig(self.request).configure(table)
+        context["table"] = table
+        return context
+
+
+
 

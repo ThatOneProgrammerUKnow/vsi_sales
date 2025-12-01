@@ -1,6 +1,7 @@
 {% extends "page/session_navbar.html" %}
 {% load render_table from django_tables2 %}
 {% load form_tags %}
+{% load static %}
 
 {% block page %}
 <div class="w-full max-w-2xl mx-auto p-6">
@@ -10,6 +11,7 @@
         <form method="post" class="space-y-6 text-sky-800">
             {% csrf_token %}
 
+            {# Form #}
             {% if form.non_field_errors %}
                 <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
                     {% for error in form.non_field_errors %}
@@ -19,7 +21,81 @@
             {% endif %}
 
             {{ form }}
+
+            {# Formset - Added by Copilot for dynamic form handling #}
+            {% if formset %}
+                {% if formset.non_field_errors %}
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                        {% for error in formset.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {# Management form tracks formset state (TOTAL_FORMS, etc.) #}
+                {{ formset.management_form }}
+                
+                {# Table headers #}
+                <div class="flex gap-3 items-start font-semibold mb-2">
+                    <div class="flex-1">Product</div>
+                    <div class="w-16">Qty</div>
+                    <div class="w-8"></div>
+                </div>
+                
+                {# Container for existing and new forms #}
+                <div id="formset-container" class="space-y-2">
+                    {% for f in formset %}
+                        <div class="formset-form flex gap-3 items-center">
+                            <div class="flex-1">
+                                {{ f.product }}
+                                {% if f.product.errors %}
+                                    <div class="text-red-600">{{ f.product.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="w-16">
+                                {{ f.qty }}
+                                {% if f.qty.errors %}
+                                    <div class="text-red-600">{{ f.qty.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="w-8 flex items-center justify-center">
+                                <button type="button" class="delete-form-btn text-red-600 hover:text-red-800 hover:bg-gray-200 hover:cursor-pointer rounded p-1 transition" title="Remove">
+                                    🗑️
+                                </button>
+                            </div>
+                            {% for hidden in f.hidden_fields %}
+                                {{ hidden }}
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                {# Template for cloning new forms via JavaScript #}
+                <template id="empty-form-template">
+                    <div class="formset-form flex gap-3 items-center">
+                        <div class="flex-1">
+                            {{ formset.empty_form.product }}
+                        </div>
+                        <div class="w-16">
+                            {{ formset.empty_form.qty }}
+                        </div>
+                        <div class="w-8 flex items-center justify-center">
+                            <button type="button" class="delete-form-btn text-red-600 hover:text-red-800 hover:bg-gray-200 hover:cursor-pointer rounded p-1 transition" title="Remove">
+                                🗑️
+                            </button>
+                        </div>
+                        {% for hidden in formset.empty_form.hidden_fields %}
+                            {{ hidden }}
+                        {% endfor %}
+                    </div>
+                </template>
+                
+                <button type="button" id="add-item-btn" class="bg-sky-600 btn-sm hover:bg-sky-700 text-white font-bold py-2 px-6 rounded hover:cursor-pointer">
+                    {{ button2_slug }}
+                </button>
+            {% endif %}
             
+            {# Submit section #}
             <div class="flex gap-3 pt-4">
                 <button type="submit" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-6 rounded hover:cursor-pointer">
                     {{ button_slug }}
@@ -34,4 +110,5 @@
         </form>
     </div>
 </div>
+<script src="{% static 'js/forms.js' %}"></script>
 {% endblock page %}

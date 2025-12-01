@@ -33,6 +33,18 @@ class OrderForm(forms.ModelForm):
         if not self.instance.pk:
             self.fields['date'].initial = timezone.now().date()
 
+#=====# OrderItem Formset #=====#
+# Inline formset linking Order -> OrderItem, using the OrderItemForm above.
+OrderItemFormSet = inlineformset_factory(
+    parent_model=Order,
+    model=OrderItem,
+    fields=["product", "qty"],
+    extra=1,
+    can_delete=True,
+)
+
+
+
 
 #=====# Invoice #=====#
 class InvoiceForm(forms.ModelForm):

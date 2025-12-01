@@ -1,5 +1,6 @@
 {% extends "page/session_navbar.html" %}
 {% load render_table from django_tables2 %}
+{% load static %}
 
 {% block page_actions %}
 <a href="{% url 'sales:create_order' %}" class="btn btn-sm btn-primary">
@@ -16,4 +17,46 @@
             {% render_table table %}
         </div>
 </div>
+
+<!-- Order Details Dialog (DaisyUI) -->
+{% if object %}
+<dialog id="expand_modal" class="modal">
+    <div class="modal-box max-w-2xl fixed top-[5%]">
+        <a href="{% url 'sales:order_table' %}" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</a>
+        
+        <h3 class="font-bold text-2xl text-sky-800 mb-4">Details for order number: {{object.id}}</h3>
+        <div>
+            <ul class="text-center">
+                <li>Status: {{object.status.status}}</li>
+                <li>Order for: {{object.client.name}}</li>
+                <li>Created on: {{object.date|date:"d M Y"}}</li>
+                <li>Order updated on: {{object.updated_at|date:"d M Y"}}</li>
+            </ul>
+            <h4 class="font-bold text-xl text-sky-800">Order items</h4>
+            <span class="mb-4">Total price R {{total_price}}</span>
+
+            <div class="grid grid-cols-2 gap-5">
+                <ul>
+                    {% for item in order_items %}
+                    <li>{{item.qty}} {{item.product.name}}</li>
+                    {% endfor %}   
+                </ul>
+                <ul>
+                    {% for item in order_items %}
+                    <li>R {{item.price_at_checkout}} per item</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {# Modal variable #}
+        <p id="show_modal" class="hidden">{{show_modal}}</p>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <a href="{% url 'sales:order_table' %}">close</a>
+    </form>
+</dialog>
+
+{% endif %}
+
+<script src="{% static 'js/view-more-modals.js'%}"></script>
 {% endblock content %}
