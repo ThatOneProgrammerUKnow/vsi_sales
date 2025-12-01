@@ -41,7 +41,7 @@ class Product(BaseModel):
             else:
                 num = 1
             # Format as HH01, HH02, etc.
-            self.id = f"HH{num:02d}"
+            self.id = f"NW{num:02d}"
         super().save(*args, **kwargs)
 
     def __str__(self):
