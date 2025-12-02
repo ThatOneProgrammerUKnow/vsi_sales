@@ -5,15 +5,27 @@ from django.forms.models import inlineformset_factory
 
 #=====# Client #=====#
 class ClientForm(forms.ModelForm):
+    phone_number = forms.CharField(
+        widget=forms.TextInput(attrs={'placeholder': '+27844557832'}))
     class Meta: 
         model = Client
-        fields = ["name", "surname", "phone_number", "email"]
+        fields = ["name", "surname", "phone_number", "email", "vat_number", "vat_verified"]
 
 #=====# Product #=====#
 class ProductForm(forms.ModelForm):
     class Meta: 
         model = Product
-        exclude = ["id", "company", "updated_at"]
+        # Exclude computed field from the form
+        exclude = ["id", "company", "updated_at", "price_after_vat"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Tailwind-friendly: add padding and ID so JS can inject the currency prefix
+        if "price_before_vat" in self.fields:
+            self.fields["price_before_vat"].widget.attrs.update({
+                "id": "price-input",
+                "class": "pl-8",
+            })
 
 #=====# Order #=====#
 class OrderForm(forms.ModelForm):

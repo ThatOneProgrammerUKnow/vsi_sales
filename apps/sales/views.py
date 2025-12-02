@@ -106,10 +106,17 @@ class CreateOrderView(BaseSessionViewMixin, CustomCreateView):
             
             formset.instance = self.object
             items = formset.save(commit=False)
-            for item in items:
-                # Store unit price at checkout
-                item.price_at_checkout = item.product.price
-                item.save()
+
+            if self.object.client.vat_verified == False:
+                for item in items:
+                    # Store unit price at order (use product price including VAT)
+                    item.price_at_checkout = item.product.price_after_vat
+                    item.save()
+            else:
+                for item in items:
+                    # Store unit price at order (use product price excluding VAT)
+                    item.price_at_checkout = item.product.price_before_vat
+                    item.save()
             
             return redirect(self.success_url)
         else:
@@ -125,6 +132,7 @@ class AddProductView(BaseSessionViewMixin, CustomCreateView):
     button_slug = "Add Product"
     cancel_url = reverse_lazy("sales:product_table")
     success_url = reverse_lazy("sales:product_table")
+
 
 #--->>> Create Client 
 class AddClientView(BaseSessionViewMixin, CustomCreateView):
@@ -159,7 +167,7 @@ class ExpandView(BaseSessionViewMixin, DetailView):
         context = super().get_context_data(**kwargs)
         order_items = OrderItem.objects.filter(order=self.object)
         context["order_items"] = order_items
-        # Calculate total checkout price
+        # Calculate total order price
         total = sum(item.price_at_checkout * item.qty for item in order_items)
         context["total_price"] = total
         context["show_modal"] = "True"

@@ -49,6 +49,8 @@ class OrderTable(Base):
 
 #=====# Product #=====#
 class ProductTable(Base):
+    price_before_vat = tables.Column(verbose_name="Price before VAT (R)")
+    price_after_vat = tables.Column(verbose_name="Price after VAT (R)")
     class Meta(Base.Meta):
         model = Product
         exclude = ["created_at", "updated_at", "company"]
