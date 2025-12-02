@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views.generic import DeleteView, DetailView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import View
 from django_tables2 import SingleTableView
 from django_tables2.config import RequestConfig
@@ -177,7 +177,56 @@ class ExpandView(BaseSessionViewMixin, DetailView):
         RequestConfig(self.request).configure(table)
         context["table"] = table
         return context
+    
+#=====# Delete Views #=====#
+#--->>> Delete Product
+class DeleteProductView(BaseSessionViewMixin, DeleteView):
+    model = Product
+    template_name = "apps/sales/confirm_delete.html"
+    success_url = reverse_lazy("sales:product_table")
+    cancel_url = reverse_lazy("sales:product_table")
 
+#--->>> Delete Client
+class DeleteClientView(BaseSessionViewMixin, DeleteView):
+    model = Client
+    template_name = "apps/sales/confirm_delete.html"
+    success_url = reverse_lazy("sales:client_table")
+    cancel_url = reverse_lazy("sales:client_table")
+
+#--->>> Delete Order
+class DeleteOrderView(BaseSessionViewMixin, DeleteView):
+    model = Order
+    template_name = "apps/sales/confirm_delete.html"
+    success_url = reverse_lazy("sales:order_table")
+    cancel_url = reverse_lazy("sales:order_table")
+
+#--->>> Delete OrderItem
+class DeleteOrderItemView(BaseSessionViewMixin, DeleteView):
+    model = OrderItem
+    template_name = "apps/sales/confirm_delete.html"
+    def get_success_url(self):
+        order_pk = self.object.order.pk   # assuming OrderItem has FK: order
+        return reverse("sales:expand_order", kwargs={"pk": order_pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        order_pk = self.object.order.pk
+        context["cancel_url"] = reverse("sales:expand_order", kwargs={"pk": order_pk})
+        return context
+
+#--->>> Delete Invoice
+class DeleteInvoiceView(BaseSessionViewMixin, DeleteView):
+    model = Invoice
+    template_name = "apps/sales/confirm_delete.html"
+    success_url = reverse_lazy("sales:invoice_table")
+    cancel_url = reverse_lazy("sales:invoice_table")
+
+#--->>> Delete Status
+class DeleteStatusView(BaseSessionViewMixin, DeleteView):
+    model = Status
+    template_name = "apps/sales/confirm_delete.html"
+    success_url = reverse_lazy("sales:order_table")
+    cancel_url = reverse_lazy("sales:order_table")
 
 
 

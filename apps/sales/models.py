@@ -75,7 +75,7 @@ class Order(BaseModel):
     id = models.CharField(primary_key=True, max_length=10, editable=False)
     date = models.DateField()
     status = models.ForeignKey(Status, on_delete=models.PROTECT)
-    client = models.ForeignKey(Client, on_delete=models.CASCADE, null=True, blank=True)
+    client = models.ForeignKey(Client, on_delete=models.PROTECT, null=True, blank=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
 
     def save(self, *args, **kwargs):
@@ -103,7 +103,7 @@ class Order(BaseModel):
 
 class OrderItem(BaseModel):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.PROTECT)
     qty = models.PositiveIntegerField(default=1)
     price_at_checkout = models.DecimalField(max_digits=10, decimal_places=2)
 
@@ -113,7 +113,7 @@ class Invoice(BaseModel):
     id = models.CharField(primary_key=True, max_length=10, editable=False)
     date = models.DateField()
     pay_by_date = models.DateField()
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True)
+    order = models.ForeignKey(Order, on_delete=models.PROTECT, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.id:

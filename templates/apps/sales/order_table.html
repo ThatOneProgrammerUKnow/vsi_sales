@@ -25,6 +25,15 @@
         <a href="{% url 'sales:order_table' %}" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</a>
         
         <h3 class="font-bold text-2xl text-sky-800 mb-4">Details for order number: {{object.id}}</h3>
+        <div class="flex justify-around m-2">
+            <a href="{% url 'sales:delete_order' object.id %}" class="bg-sky-700 hover:bg-sky-800 text-xs text-white py-1 px-2 rounded">
+                Remove Order
+            </a>
+            <a href="" class="bg-sky-700 hover:bg-sky-800 text-xs text-white py-1 px-2 rounded">
+                Edit Order
+            </a>
+        </div>
+        <hr class="mt-4 mb-4">
         <div>
             <ul class="text-center">
                 <li>Status: {{object.status.status}}</li>

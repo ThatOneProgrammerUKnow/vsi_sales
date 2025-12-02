@@ -18,14 +18,6 @@ class ProductForm(forms.ModelForm):
         # Exclude computed field from the form
         exclude = ["id", "company", "updated_at", "price_after_vat"]
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Tailwind-friendly: add padding and ID so JS can inject the currency prefix
-        if "price_before_vat" in self.fields:
-            self.fields["price_before_vat"].widget.attrs.update({
-                "id": "price-input",
-                "class": "pl-8",
-            })
 
 #=====# Order #=====#
 class OrderForm(forms.ModelForm):

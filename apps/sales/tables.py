@@ -22,6 +22,18 @@ class Base(tables.Table):
 
 #=====# Client #=====#
 class ClientTable(Base):
+    delete = TemplateColumn(
+        template_code="""
+        <a  
+            type='button'  
+            class='text-xl
+            hover:bg-gray-200 hover:cursor-pointer rounded p-1' 
+            href="{% url  'sales:delete_client' record.id %}"> 
+            🗑️</a>
+        """,
+        verbose_name="Delete"
+    )
+
     class Meta(Base.Meta):
         model = Client
         exclude = ["id", "created_at", "updated_at", "company"]
@@ -51,6 +63,20 @@ class OrderTable(Base):
 class ProductTable(Base):
     price_before_vat = tables.Column(verbose_name="Price before VAT (R)")
     price_after_vat = tables.Column(verbose_name="Price after VAT (R)")
+    delete = TemplateColumn(
+        template_code="""
+        <a  
+            type='button'  
+            class='text-xl
+            hover:bg-gray-200 hover:cursor-pointer rounded p-1' 
+            href="{% url  'sales:delete_product' record.id %}"> 
+            🗑️</a>
+        """,
+        verbose_name="Delete"
+    )
+
+
+
     class Meta(Base.Meta):
         model = Product
         exclude = ["created_at", "updated_at", "company"]
@@ -61,6 +87,17 @@ class InvoiceTable(Base):
     date = tables.DateColumn()
     pay_by_date = tables.DateColumn()
     order_id = tables.Column(accessor='order.id', verbose_name="Order ID")
+    delete = TemplateColumn(
+        template_code="""
+        <a  
+            type='button'  
+            class='text-xl
+            hover:bg-gray-200 hover:cursor-pointer rounded p-1' 
+            href="{% url  'sales:delete_invoice' record.id %}"> 
+            🗑️</a>
+        """,
+        verbose_name="Delete"
+    )
 
     class Meta(Base.Meta):
         model = Invoice
