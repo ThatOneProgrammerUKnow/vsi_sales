@@ -1,5 +1,6 @@
 from django_tables2.views import SingleTableView
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView, DeleteView
+from django.http import Http404
 
 class BaseSessionViewMixin:
     menu_slug = ""
@@ -23,3 +24,16 @@ class CustomCreateView(CreateView):
     def form_valid(self, form):
         form.instance.company = self.request.user.company  
         return super().form_valid(form)
+    
+class CompanyFilterUpdateMixin(UpdateView):
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.filter(company=self.request.user.company)
+    
+class CompanyFilterDeleteMixin(DeleteView):
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if not obj.company == self.request.user.company: 
+            raise Http404("You are not authorized to delete this object.")
+        return obj
+

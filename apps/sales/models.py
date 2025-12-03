@@ -6,6 +6,7 @@ from django.utils import timezone
 from phonenumber_field.modelfields import PhoneNumberField
 from apps.accounts.models import Company
 from decimal import Decimal
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 #=====# Validation #=====#
 def valid_sa_vat(value):
@@ -75,7 +76,7 @@ class Order(BaseModel):
     id = models.CharField(primary_key=True, max_length=10, editable=False)
     date = models.DateField()
     status = models.ForeignKey(Status, on_delete=models.PROTECT)
-    client = models.ForeignKey(Client, on_delete=models.PROTECT, null=True, blank=True)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, null=True, blank=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
 
     def save(self, *args, **kwargs):
@@ -103,8 +104,9 @@ class Order(BaseModel):
 
 class OrderItem(BaseModel):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     qty = models.PositiveIntegerField(default=1)
+    discount = models.DecimalField(max_digits=5, decimal_places=2, default=Decimal(0), validators=[MinValueValidator(0), MaxValueValidator(100)])
     price_at_checkout = models.DecimalField(max_digits=10, decimal_places=2)
 
 
@@ -113,7 +115,7 @@ class Invoice(BaseModel):
     id = models.CharField(primary_key=True, max_length=10, editable=False)
     date = models.DateField()
     pay_by_date = models.DateField()
-    order = models.ForeignKey(Order, on_delete=models.PROTECT, null=True, blank=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -122,7 +124,7 @@ class Invoice(BaseModel):
             prefix = now.strftime("%y%m")  # e.g. 2511 for Nov 2025
 
             # Find the last record with the same prefix
-            last = Invoice.objects.filter(id__startswith=prefix).order_by('-id').first()
+            last = Invoice.objects.filter(id__startswith=f"I{prefix}").order_by('-id').first()
             if last:
                 # Extract numeric suffix and increment
                 num = int(last.id[-2:]) + 1

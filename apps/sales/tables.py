@@ -20,8 +20,19 @@ class Base(tables.Table):
             "td":{"class":"text-center"},
         }
 
-#=====# Client #=====#
+#==================================# Client #==================================#
 class ClientTable(Base):
+    edit = TemplateColumn(
+        template_code="""
+        <a  
+        id="view_contacts_modal"
+        type='button'  
+        class='btn btn-sm font-medium' 
+        href="{% url  'sales:update_client' record.id %}"> 
+        Edit</a>
+        """,
+        verbose_name="Update"
+    )
     delete = TemplateColumn(
         template_code="""
         <a  
@@ -38,7 +49,7 @@ class ClientTable(Base):
         model = Client
         exclude = ["id", "created_at", "updated_at", "company"]
 
-#=====# Orders #=====#
+#==================================# Orders #==================================#
 class OrderTable(Base):
     expand = TemplateColumn(
         template_code="""
@@ -59,10 +70,21 @@ class OrderTable(Base):
     
 
 
-#=====# Product #=====#
+#==================================# Product #==================================#
 class ProductTable(Base):
     price_before_vat = tables.Column(verbose_name="Price before VAT (R)")
     price_after_vat = tables.Column(verbose_name="Price after VAT (R)")
+    edit = TemplateColumn(
+        template_code="""
+        <a  
+        id="view_contacts_modal"
+        type='button'  
+        class='btn btn-sm font-medium' 
+        href="{% url  'sales:update_product' record.id %}"> 
+        Edit</a>
+        """,
+        verbose_name="Update"
+    )
     delete = TemplateColumn(
         template_code="""
         <a  
@@ -81,12 +103,25 @@ class ProductTable(Base):
         model = Product
         exclude = ["created_at", "updated_at", "company"]
 
-#=====# Invoice #=====#
+#==================================# Invoice #==================================#
 class InvoiceTable(Base):
     id = tables.Column()
     date = tables.DateColumn()
     pay_by_date = tables.DateColumn()
     order_id = tables.Column(accessor='order.id', verbose_name="Order ID")
+    client = tables.Column(accessor="order.client", verbose_name="Client")
+
+
+    Preview = TemplateColumn(
+        template_code="""
+        <a  
+        type='button'  
+        class='btn btn-sm font-medium' 
+        href="{% url  'sales:preview_invoice' record.id %}"> 
+        Preview</a>
+        """,
+        verbose_name="Preview"
+    )
     delete = TemplateColumn(
         template_code="""
         <a  
@@ -99,8 +134,9 @@ class InvoiceTable(Base):
         verbose_name="Delete"
     )
 
+
     class Meta(Base.Meta):
         model = Invoice
-        fields = ('id', 'order_id', 'date', 'pay_by_date')
+        fields = ('id', 'order_id', 'date', 'pay_by_date', 'client')
 
     

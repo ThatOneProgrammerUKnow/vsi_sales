@@ -45,48 +45,67 @@
                 {# Container for existing and new forms #}
                 <div id="formset-container" class="space-y-2">
                     {% for f in formset %}
-                        <div class="formset-form flex gap-3 items-center">
-                            <div class="flex-1">
-                                {{ f.product }}
-                                {% if f.product.errors %}
-                                    <div class="text-red-600">{{ f.product.errors }}</div>
-                                {% endif %}
+                        <div class="formset-item">
+                            <div class="flex gap-3 items-center">
+                                <div class="flex-1">
+                                    {{ f.product }}
+                                    {% if f.product.errors %}
+                                        <div class="text-red-600">{{ f.product.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="w-16">
+                                    {{ f.qty }}
+                                    {% if f.qty.errors %}
+                                        <div class="text-red-600">{{ f.qty.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                {% for hidden in f.hidden_fields %}
+                                    {{ hidden }}
+                                {% endfor %}
                             </div>
-                            <div class="w-16">
-                                {{ f.qty }}
-                                {% if f.qty.errors %}
-                                    <div class="text-red-600">{{ f.qty.errors }}</div>
-                                {% endif %}
+                            {{ f.discount.label}}
+                            <div class="flex gap-3 items-end">
+                                <div class="flex-1">
+                                    {{ f.discount }}
+                                    {% if f.discount.errors %}
+                                        <div class="text-red-600">{{ f.discount.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="w-8 flex items-end justify-center">
+                                    <button type="button" class="delete-form-btn hover:bg-gray-200 hover:cursor-pointer rounded p-1 transition" title="Remove">
+                                        🗑️
+                                    </button>
+                                </div>
                             </div>
-                            <div class="w-8 flex items-center justify-center">
-                                <button type="button" class="delete-form-btn text-red-600 hover:text-red-800 hover:bg-gray-200 hover:cursor-pointer rounded p-1 transition" title="Remove">
-                                    🗑️
-                                </button>
-                            </div>
-                            {% for hidden in f.hidden_fields %}
-                                {{ hidden }}
-                            {% endfor %}
                         </div>
                     {% endfor %}
                 </div>
 
                 {# Template for cloning new forms via JavaScript #}
                 <template id="empty-form-template">
-                    <div class="formset-form flex gap-3 items-center">
-                        <div class="flex-1">
-                            {{ formset.empty_form.product }}
+                    <div class="formset-item">
+                        <div class="flex gap-3 items-center">
+                            <div class="flex-1">
+                                {{ formset.empty_form.product }}
+                            </div>
+                            <div class="w-16">
+                                {{ formset.empty_form.qty }}
+                            </div>
+                            {% for hidden in formset.empty_form.hidden_fields %}
+                                {{ hidden }}
+                            {% endfor %}
                         </div>
-                        <div class="w-16">
-                            {{ formset.empty_form.qty }}
+                        {{ formset.empty_form.discount.label}}
+                        <div class="flex gap-3 items-end">
+                            <div class="flex-1">
+                                {{ formset.empty_form.discount }}
+                            </div>
+                            <div class="w-8 flex items-center justify-center">
+                                <button type="button" class="delete-form-btn hover:bg-gray-200 hover:cursor-pointer rounded p-1 transition" title="Remove">
+                                    🗑️
+                                </button>
+                            </div>
                         </div>
-                        <div class="w-8 flex items-center justify-center">
-                            <button type="button" class="delete-form-btn text-red-600 hover:text-red-800 hover:bg-gray-200 hover:cursor-pointer rounded p-1 transition" title="Remove">
-                                🗑️
-                            </button>
-                        </div>
-                        {% for hidden in formset.empty_form.hidden_fields %}
-                            {{ hidden }}
-                        {% endfor %}
                     </div>
                 </template>
                 

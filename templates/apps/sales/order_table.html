@@ -21,7 +21,7 @@
 <!-- Order Details Dialog (DaisyUI) -->
 {% if object %}
 <dialog id="expand_modal" class="modal">
-    <div class="modal-box max-w-2xl fixed top-[5%]">
+    <div class="modal-box  fixed top-[5%] min-w-fit">
         <a href="{% url 'sales:order_table' %}" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</a>
         
         <h3 class="font-bold text-2xl text-sky-800 mb-4">Details for order number: {{object.id}}</h3>
@@ -29,32 +29,56 @@
             <a href="{% url 'sales:delete_order' object.id %}" class="bg-sky-700 hover:bg-sky-800 text-xs text-white py-1 px-2 rounded">
                 Remove Order
             </a>
-            <a href="" class="bg-sky-700 hover:bg-sky-800 text-xs text-white py-1 px-2 rounded">
+            <a href="{% url 'sales:update_order' object.id %}" class="bg-sky-700 hover:bg-sky-800 text-xs text-white py-1 px-2 rounded">
                 Edit Order
+            </a>
+            <a href="{% url 'sales:create_invoice' object.id %}" class="bg-sky-700 hover:bg-sky-800 text-xs text-white py-1 px-2 rounded">
+                Generate Invoice
             </a>
         </div>
         <hr class="mt-4 mb-4">
         <div>
+            <h4 class="font-bold text-xl text-sky-800">Details</h4>
             <ul class="text-center">
+                
                 <li>Status: {{object.status.status}}</li>
-                <li>Order for: {{object.client.name}}</li>
+                <li>Order for: {{object.client}}</li>
                 <li>Created on: {{object.date|date:"d M Y"}}</li>
                 <li>Order updated on: {{object.updated_at|date:"d M Y"}}</li>
             </ul>
-            <h4 class="font-bold text-xl text-sky-800">Order items</h4>
+            
+            <h4 class="font-bold text-xl text-sky-800 relative text-center">
+                <span class="inline-block">Order items</span>
+                <span class="text-sm font-normal align-baseline ml-1 bottom-0.5 absolute">(excl VAT)</span>
+            </h4>
+
             <span class="mb-4">Total price R {{total_price}}</span>
 
-            <div class="grid grid-cols-2 gap-5">
-                <ul>
-                    {% for item in order_items %}
-                    <li>{{item.qty}} {{item.product.name}}</li>
-                    {% endfor %}   
-                </ul>
-                <ul>
-                    {% for item in order_items %}
-                    <li>R {{item.price_at_checkout}} per item</li>
-                    {% endfor %}
-                </ul>
+            <div class="grid grid-cols-3 gap-5">
+                <div class="text-left">
+                    <p class="font-semibold">Product & Qty</p>
+                    <ul>
+                        {% for item in order_items %}
+                        <li>{{item.qty}} {{item.product.name}}</li>
+                        {% endfor %}   
+                    </ul>
+                </div>
+                <div class="text-center">
+                    <p class="font-semibold">Discount</p>
+                    <ul>
+                        {% for item in order_items %}
+                        <li>{{item.discount}}%</li>
+                        {% endfor %}   
+                    </ul>
+                </div>
+                <div class="text-center">
+                    <p class="font-semibold">Price per Item</p>
+                    <ul>
+                        {% for item in order_items %}
+                        <li>R {{item.price_at_checkout}}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
         </div>
         {# Modal variable #}

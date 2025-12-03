@@ -2,6 +2,9 @@ from django import forms
 from django.utils import timezone
 from .models import Client, Product, Order, OrderItem, Invoice, Status
 from django.forms.models import inlineformset_factory
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 #=====# Client #=====#
 class ClientForm(forms.ModelForm):
@@ -33,27 +36,41 @@ class OrderForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
+
         if not self.instance.pk:
             self.fields['date'].initial = timezone.now().date()
 
+        self.fields["status"].queryset = Status.objects.filter(company=user.company)
+        self.fields["client"].queryset = Client.objects.filter(company=user.company)
+
+#=====# OrderItem Form #=====#
+class OrderItemForm(forms.ModelForm):
+    class Meta:
+        model = OrderItem
+        fields = ["product", "qty", "discount"]
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')  # get user from view
+        super().__init__(*args, **kwargs)
+        # Filter product dropdown to only products in this user's company
+        self.fields['product'].queryset = Product.objects.filter(company=user.company)
+
 #=====# OrderItem Formset #=====#
-# Inline formset linking Order -> OrderItem, using the OrderItemForm above.
 OrderItemFormSet = inlineformset_factory(
     parent_model=Order,
     model=OrderItem,
-    fields=["product", "qty"],
+    form = OrderItemForm,
+    fields=["product", "qty", "discount"],
     extra=1,
     can_delete=True,
 )
 
-
-
-
 #=====# Invoice #=====#
 class InvoiceForm(forms.ModelForm):
     class Meta: 
-        exclude = ["updated_at"]
+        fields = ["date", "pay_by_date"]
         model = Invoice
         widgets = {
         'pay_by_date': forms.DateInput(attrs={

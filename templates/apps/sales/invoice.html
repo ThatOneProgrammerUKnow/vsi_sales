@@ -1,0 +1,120 @@
+{% extends "page/base.html" %}
+
+{% block content %}
+<div class="bg-gray-100 p-10">
+    <div class="max-w-4xl mx-auto bg-white shadow-lg">
+        <!-- Header -->
+        <div class="flex justify-between items-start p-10 border-b-4 border-sky-800">
+            <div>
+                <h1 class="text-3xl font-bold text-sky-800 mb-2">{{ company.name }}</h1>
+                <p class="text-gray-600 leading-relaxed">
+                    Email: {{ company.email }}<br>
+                    {% if company.address %}
+                    Address: {{ company.address }}
+                    {% endif %}
+                    
+                </p>
+            </div>
+            <div class="text-right">
+                <h2 class="text-4xl font-bold text-sky-800 mb-2">INVOICE</h2>
+                <p class="text-gray-700 my-1"><span class="font-semibold text-sky-800">Invoice #:</span> {{ invoice.id }}</p>
+                <p class="text-gray-700 my-1"><span class="font-semibold text-sky-800">Date:</span> {{ invoice.date|date:"d M Y" }}</p>
+                <p class="text-gray-700 my-1"><span class="font-semibold text-sky-800">Due Date:</span> {{ invoice.pay_by_date|date:"d M Y" }}</p>
+            </div>
+        </div>
+        
+        <!-- Billing Information -->
+        <div class="flex justify-between p-10 pb-6">
+            <div class="flex-1">
+                <h3 class="text-sm font-semibold text-sky-800 uppercase tracking-wider mb-2">Bill To</h3>
+                <p class="text-gray-700 leading-relaxed">
+                    <span class="font-semibold">{{ invoice.order.client.name }} {{ invoice.order.client.surname }}</span><br>
+                    {{ invoice.order.client.email }}<br>
+                    {{ invoice.order.client.phone_number }}<br>
+                    {% if invoice.order.client.vat_number %}
+                    VAT #: {{ invoice.order.client.vat_number }}
+                    {% endif %}
+                </p>
+            </div>
+            <div class="flex-1">
+                <h3 class="text-sm font-semibold text-sky-800 uppercase tracking-wider mb-2">Order Details</h3>
+                <p class="text-gray-700 leading-relaxed">
+                    <span class="font-semibold">Order #:</span> {{ invoice.order.id }}<br>
+                    <span class="font-semibold">Order Date:</span> {{ invoice.order.date|date:"d M Y" }}<br>
+                    <span class="font-semibold">Status:</span> {{ invoice.order.status.status }}
+                </p>
+            </div>
+        </div>
+        
+        <!-- Items Table -->
+        <div class="px-10 pb-6">
+            <table class="w-full">
+                <thead class="bg-sky-800 text-white">
+                    <tr>
+                        <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">Description</th>
+                        <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">Quantity</th>
+                        <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">Unit Price</th>
+                        <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">Discount</th>
+                        <th class="py-3 px-4 text-right text-xs font-semibold uppercase tracking-wider">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in invoice_items %}
+                    <tr class="border-b border-gray-200">
+                        <td class="py-3 px-4 text-gray-700">{{ item.product.name }}</td>
+                        <td class="py-3 px-4 text-gray-700">{{ item.qty }}</td>
+                        <td class="py-3 px-4 text-gray-700">R {{ item.price_at_checkout|floatformat:2 }}</td>
+                        <td class="py-3 px-4 text-gray-700">{{ item.discount }}%</td>
+                        <td class="py-3 px-4 text-right font-semibold text-gray-700">R {{ item.line_total|floatformat:2 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Totals -->
+        <div class="px-10 pb-6">
+            <div class="float-right w-80">
+                <div class="flex justify-between py-2 border-t border-gray-200">
+                    <span class="text-gray-700">Subtotal:</span>
+                    <span class="text-gray-700">R {{ subtotal|floatformat:2 }}</span>
+                </div>
+                <div class="flex justify-between py-2">
+                    <span class="text-gray-700">VAT (15%):</span>
+                    <span class="text-gray-700">R {{ vat|floatformat:2 }}</span>
+                </div>
+                <div class="flex justify-between py-3 border-t-2 border-sky-800 mt-2 text-lg font-bold text-sky-800">
+                    <span>Total Due:</span>
+                    <span>R {{ total|floatformat:2 }}</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Payment Terms -->
+        <div class="clear-both px-10 pb-6">
+            <div class="bg-gray-50 p-5 border-l-4 border-sky-800">
+                <h3 class="text-sm font-semibold text-sky-800 mb-2">Payment Terms</h3>
+                <p class="text-gray-700 leading-relaxed">
+                    Payment is due by <span class="font-semibold">{{ invoice.pay_by_date|date:"d F Y" }}</span>. 
+                    Please include invoice number {{ invoice.id }} with your payment.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="px-10 py-6 border-t border-gray-200 text-center text-gray-600 text-sm">
+            <p class="mb-1">Thank you for your business!</p>
+            <p>If you have any questions about this invoice, please contact us.</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    @media print {
+        body {
+            padding: 0;
+            background: white;
+        }
+    }
+</style>
+{% endblock content %}
