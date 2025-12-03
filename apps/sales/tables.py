@@ -117,7 +117,7 @@ class InvoiceTable(Base):
         <a  
         type='button'  
         class='btn btn-sm font-medium' 
-        href="{% url  'sales:preview_invoice' record.id %}"> 
+        href="{% url  'sales:generate_invoice_pdf' record.id %}"> 
         Preview</a>
         """,
         verbose_name="Preview"

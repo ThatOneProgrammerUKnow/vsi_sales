@@ -33,6 +33,7 @@ urlpatterns = [
     path("invoice/delete/<str:pk>", views.DeleteInvoiceView.as_view(), name="delete_invoice"),
     path("invoice/update/<str:pk>", views.UpdateInvoiceView.as_view(), name="update_invoice"),
     path("invoice/preview/<str:pk>", views.PreviewInvoiceView.as_view(), name="preview_invoice"),
+    path("invoice/generate/pdf/<str:pk>", views.GenerateInvoicePDFView.as_view(), name="generate_invoice_pdf"),
 
     #=======================================# Order Item #=======================================#
     path("order/expand/<str:pk>", views.ExpandView.as_view(), name="expand_order"),

@@ -5,7 +5,13 @@ from django.urls import reverse_lazy, reverse
 from django.views import View
 from django_tables2 import SingleTableView
 from django_tables2.config import RequestConfig
-from django.http import Http404
+from django.http import Http404, HttpResponse
+from django.template.loader import get_template
+from django.template.loader import render_to_string
+from django.conf import settings
+
+#===================================# Python  #===================================#
+from pathlib import Path
 
 #===================================# Custom #===================================#
 
@@ -19,8 +25,7 @@ from .tables import ClientTable, ProductTable, InvoiceTable, OrderTable
 from .forms import ClientForm, ProductForm, OrderForm, InvoiceForm, StatusForm, OrderItemFormSet
 
 #===================================# Third party #===================================#
-import weasyprint
-
+from playwright.sync_api import sync_playwright
 
 #=====# Generic Variables #=====#
 generic_form = "apps/sales/generic_form.html"
@@ -187,55 +192,6 @@ class AddStatusView(BaseSessionViewMixin, CustomCreateView):
     success_url = reverse_lazy("sales:order_table")
 
 
-#===============================================================# Modal Views #===============================================================#
-class ExpandView(BaseSessionViewMixin, DetailView):
-    model = Order
-    template_name = "apps/sales/order_table.html"
-    menu_slug = "order"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        order_items = OrderItem.objects.filter(order=self.object)
-        context["order_items"] = order_items
-
-        # Calculate total order price
-        total = sum((item.price_at_checkout * item.qty) for item in order_items)
-        context["total_price"] = total
-        context["show_modal"] = "True"
-
-        # Also render the orders table on the detail page
-        queryset = Order.objects.filter(company=self.request.user.company)
-        table = OrderTable(queryset)
-        RequestConfig(self.request).configure(table)
-        context["table"] = table
-        return context
-    
-class PreviewInvoiceView(BaseSessionViewMixin, DetailView):
-    model = Invoice
-    template_name = "apps/sales/invoice.html"
-    menu_slug = "invoice"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        invoice_items = OrderItem.objects.filter(order=self.object.order)
-
-        for item in invoice_items:
-            item.line_total = item.qty*item.price_at_checkout
-
-        context["invoice_items"] = invoice_items
-        context["company"] = self.request.user.company
-        context["company_address"] = self.request.user.company.address
-        context["email"] = self.request.user.email
-        return context
-    
-    def get_object(self, queryset=None):
-        obj = super().get_object(queryset)
-
-        if obj.order.company != self.request.user.company:
-            raise Http404("Invoice not found")
-        
-        return obj
 
 
 #===============================================================# Delete Views #===============================================================#
@@ -275,11 +231,17 @@ class DeleteOrderItemView(BaseSessionViewMixin, DeleteView):
         return context
 
 #--->>> Delete Invoice
-class DeleteInvoiceView(BaseSessionViewMixin, CompanyFilterDeleteMixin):
+class DeleteInvoiceView(BaseSessionViewMixin, DeleteView):
     model = Invoice
     template_name = confirm_delete
     success_url = reverse_lazy("sales:invoice_table")
     cancel_url = reverse_lazy("sales:invoice_table")
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if not obj.order.company == self.request.user.company: 
+            raise Http404("You are not authorized to delete this object.")
+        return obj
 
 #--->>> Delete Status
 class DeleteStatusView(BaseSessionViewMixin, CompanyFilterDeleteMixin):
@@ -386,4 +348,78 @@ class UpdateStatusView(BaseSessionViewMixin, CompanyFilterUpdateMixin):
     title_slug = "Update Status"
     button_slug = "Update"
 
+#===============================================================# Modal Views #===============================================================#
+class ExpandView(BaseSessionViewMixin, DetailView):
+    model = Order
+    template_name = "apps/sales/order_table.html"
+    menu_slug = "order"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        order_items = OrderItem.objects.filter(order=self.object)
+        context["order_items"] = order_items
+
+        # Calculate total order price
+        total = sum((item.price_at_checkout * item.qty) for item in order_items)
+        context["total_price"] = total
+        context["show_modal"] = "True"
+
+        # Also render the orders table on the detail page
+        queryset = Order.objects.filter(company=self.request.user.company)
+        table = OrderTable(queryset)
+        RequestConfig(self.request).configure(table)
+        context["table"] = table
+        return context
+    
+class PreviewInvoiceView(BaseSessionViewMixin, DetailView):
+    model = Invoice
+    template_name = "apps/sales/invoice.html"
+    menu_slug = "invoice"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        invoice_items = OrderItem.objects.filter(order=self.object.order)
+
+        for item in invoice_items:
+            item.line_total = item.qty*item.price_at_checkout
+
+        context["invoice_items"] = invoice_items
+        context["company"] = self.request.user.company
+        context["company_address"] = self.request.user.company.address
+        context["email"] = self.request.user.email
+        return context
+    
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+
+        if obj.order.company != self.request.user.company:
+            raise Http404("Invoice not found")
+        
+        return obj
+
+class GenerateInvoicePDFView(PreviewInvoiceView):
+    def get(self, request, *args, **kwargs):
+        # Get invoice object & context
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+
+        # Render HTML template to string
+        html_content = render_to_string('apps/sales/invoice_standalone.html', context)
+
+        # Generate PDF with Playwright
+        with sync_playwright() as p:
+            browser = p.chromium.launch()
+            page = browser.new_page()
+            
+            # Set the content of the page
+            page.set_content(html_content, wait_until="networkidle")
+            
+            pdf_bytes = page.pdf(format="A4", print_background=True)
+            browser.close()
+
+        # Return PDF as response
+        response = HttpResponse(pdf_bytes, content_type='application/pdf')
+        response['Content-Disposition'] = f'inline; filename="invoice_{self.object.id}.pdf"'
+        return response
 
