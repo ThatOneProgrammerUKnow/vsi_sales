@@ -37,19 +37,20 @@
     {% endblock additional_styles %}
 </head>
 
-<body class="min-h-screen -fit bg-cover bg-center bg-fixed m-0 p-0 pt-1 text-sky-900 bg-sky-800 overflow-auto" 
+<body class="min-h-screen bg-cover bg-center p-9 bg-fixed text-sky-900 bg-sky-800 overflow-auto" 
 hx-headers='{"X-CSRFToken": {{ csrf_token }}}'>
+{% block island_one %}
     {% block header %}
     {% endblock header %}
-
-    
+{% endblock island_one %}
+{% block island_two %}
     {% block content %}
     {% endblock content %}
     {% block page %}
     {% endblock page %}
     {% block modal %}
     {% endblock modal %}
-
+{% endblock island_two %}
     {% block scripts %}
     {% endblock scripts %}
 </form>

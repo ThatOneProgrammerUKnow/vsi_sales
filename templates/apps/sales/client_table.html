@@ -1,14 +1,14 @@
 {% extends "page/session_navbar.html" %}
 {% load render_table from django_tables2 %}
 
-{% block page_actions %}
+{% block actions %}
 <a href="{% url 'sales:add_client' %}" class="btn btn-sm btn-primary">
     + Add Client
 </a>
-{% endblock page_actions %}
+{% endblock actions %}
 
 {% block content %}
-<div class="m-9 p-4 bg-white shadow-[1px_0_2px_2px_rgb(0,0,0,0.25)] text-center rounded-xl flex-1 min-w-{% firstof  as  %}">
+<div class="p-4 bg-white shadow-[1px_0_2px_2px_rgb(0,0,0,0.25)] text-center rounded-xl flex-1 min-w-{% firstof  as  %}">
         <div class="overflow-x-scroll">
             {% render_table table %}
         </div>

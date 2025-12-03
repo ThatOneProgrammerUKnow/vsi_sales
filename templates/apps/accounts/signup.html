@@ -28,7 +28,7 @@
                         </fieldset>
                         <button :disabled="!terms_accepted" :class="terms_accepted ? 'btn-primary' : 'bg-gray-700'" type="submit" name="submit" class="w-full btn btn-sm" id="submit-id-submit">Submit</button>
                         <p class="text-sm font-light text-gray-500 pt-6">
-                            Already have an account? <a href="{% url 'account_login' %}" class="font-medium text-blue-600 hover:underline dark:text-blue-500">Sign in</a>
+                            Already have an account? <a href="{% url 'accounts:login' %}" class="font-medium text-blue-600 hover:underline dark:text-blue-500">Sign in</a>
                         </p>
                     </form>
                 </div>

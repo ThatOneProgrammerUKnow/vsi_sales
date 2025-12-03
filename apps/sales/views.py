@@ -28,8 +28,8 @@ from .forms import ClientForm, ProductForm, OrderForm, InvoiceForm, StatusForm, 
 from playwright.sync_api import sync_playwright
 
 #=====# Generic Variables #=====#
-generic_form = "apps/sales/generic_form.html"
-confirm_delete = "apps/sales/confirm_delete.html"
+generic_form = "generic/generic_form.html"
+confirm_delete = "generic/confirm_delete.html"
 #===============================================================# Tables #===============================================================#
 #--->>> Client table
 class ClientListView(BaseSessionViewMixin, SingleTableView):

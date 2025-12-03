@@ -216,9 +216,9 @@ CELERY_BROKER_URL = os.getenv("REDIS_URL", default="redis://")
 
 
 # Django Allauth
-LOGIN_URL = "account_login"
-LOGOUT_REDIRECT_URL = "account_login"
-LOGIN_REDIRECT_URL = "sales:client_table"
+LOGIN_URL = "accounts:login"
+LOGOUT_REDIRECT_URL = "accounts:login"
+LOGIN_REDIRECT_URL = "accounts:dashboard"
 
 # Requires the user email to login
 ACCOUNT_LOGIN_METHODS = {"email"}

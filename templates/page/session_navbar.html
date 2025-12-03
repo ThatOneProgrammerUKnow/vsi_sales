@@ -1,63 +1,30 @@
-{% extends "page/base.html" %}
-{% load static %}
+{% extends "page/session_header.html" %}
 
-{% block header %}
-<header class="m-9 p-4 bg-white shadow-[1px_0_2px_2px_rgb(0,0,0,0.25)] text-center rounded-xl relative">
-        <div>
-                <div class="flex flex-row justify-center">
-                    
-                 <h1 class="absolute left-5 text-lg  text-sky-800 font-bold">{{user.username}}</h1>
-                        
-                <h1 class="text-4xl text-sky-800 font-bold">VSI - Sales</h1>
+{% block navbar %}
+    {# Navigation bar #}
+    <nav class="py-5">
+        <ul class="flex justify-evenly">
+            {# Orders #}
+            <li><a class="btn  font-medium text-sky-800 shadow-[1px_1px_0.5px_0.5px_rgb(0,0,0,0.25)] hover:bg-gray-200
+                {% if menu_slug == 'order'%}bg-gray-200 translate-y-[1px]{% endif %}"
+                href="{% url 'sales:order_table' %}">Orders</a></li>
 
+            {# Invoices #}
+            <li><a class="btn  font-medium text-sky-800 shadow-[1px_1px_0.5px_0.5px_rgb(0,0,0,0.25)] hover:bg-gray-200
+                {% if menu_slug == 'invoice'%}bg-gray-200 translate-y-[1px]{% endif %}"
+                href="{% url 'sales:invoice_table' %}">Invoices</a></li>
 
-              
-                <div class="absolute right-5 flex flex-end">
-                    {# Admin Interface #}
-                    {% if is_superuser %}
-                        <a href="{% url 'admin:index' %}" 
-                        class="btn bnt-sm ml-4 font-bold shadow-[0_1px_0.5px_0.5px_rgb(0,0,0,0.1)] text-sky-900">Admin </a>
-                    {% endif %}
+            {# Clients #}
+            <li><a class="btn t font-medium text-sky-800 shadow-[1px_1px_0.5px_0.5px_rgb(0,0,0,0.25)] hover:bg-gray-200
+                {% if menu_slug == 'client'%}bg-gray-200 translate-y-[1px]{% endif %}"
+                href="{% url 'sales:client_table' %}">Clients</a></li>
 
-                    {# Log out #}
-                    <a href="{% url 'account_logout' %}" 
-                    class="btn bnt-sm ml-4 font-bold shadow-[0_1px_0.5px_0.5px_rgb(0,0,0,0.1)] text-sky-900">Logout </a>
-                </div>
-                
-            </div>
-
-            {# Navigation bar #}
-            <nav class="py-5">
-                <ul class="flex justify-evenly">
-                    {# Orders #}
-                    <li><a class="btn  font-medium text-sky-800 shadow-[1px_1px_0.5px_0.5px_rgb(0,0,0,0.25)] hover:bg-gray-200
-                        {% if menu_slug == 'order'%}bg-gray-200 translate-y-[1px]{% endif %}"
-                        href="{% url 'sales:order_table' %}">Orders</a></li>
-
-                    {# Invoices #}
-                    <li><a class="btn  font-medium text-sky-800 shadow-[1px_1px_0.5px_0.5px_rgb(0,0,0,0.25)] hover:bg-gray-200
-                        {% if menu_slug == 'invoice'%}bg-gray-200 translate-y-[1px]{% endif %}"
-                        href="{% url 'sales:invoice_table' %}">Invoices</a></li>
-
-                    {# Clients #}
-                    <li><a class="btn t font-medium text-sky-800 shadow-[1px_1px_0.5px_0.5px_rgb(0,0,0,0.25)] hover:bg-gray-200
-                        {% if menu_slug == 'client'%}bg-gray-200 translate-y-[1px]{% endif %}"
-                        href="{% url 'sales:client_table' %}">Clients</a></li>
-
-                    {# Products #}
-                    <li><a class="btn  font-medium text-sky-800 shadow-[1px_1px_0.5px_0.5px_rgb(0,0,0,0.25)] hover:bg-gray-200
-                    {% if menu_slug == 'product'%}bg-gray-200 translate-y-[1px]{% endif %}"
-                        href="{% url 'sales:product_table' %}">Products</a></li>
+            {# Products #}
+            <li><a class="btn  font-medium text-sky-800 shadow-[1px_1px_0.5px_0.5px_rgb(0,0,0,0.25)] hover:bg-gray-200
+            {% if menu_slug == 'product'%}bg-gray-200 translate-y-[1px]{% endif %}"
+                href="{% url 'sales:product_table' %}">Products</a></li>
 
 
-                </ul>
-            </nav>
-        </div>
-
-        <div class="flex justify-evenly">
-            {% block page_actions%}
-            {% endblock page_actions %}
-        </div>
-
-</header>
-{% endblock header %}
+        </ul>
+    </nav>
+{% endblock navbar %}

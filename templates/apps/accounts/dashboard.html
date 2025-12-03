@@ -1,0 +1,13 @@
+{% extends "page/session_header.html" %}
+
+{% block actions %} 
+<hr class="border-b-2 mb-3 mt-3">
+    <h2 class="text-center text-3xl mb-5">Dashboard</h2>
+    <section class="flex justify-around">
+        {% if not user.company %}
+        <a href="{% url 'accounts:create_company' %}" class="btn btn-sm btn-primary">
+            Create Company
+        </a>
+        {% endif %}
+    </section>
+{% endblock actions %}

@@ -1,0 +1,51 @@
+{% extends "page/base.html" %}
+{% load static %}
+
+{% block island_one %}
+<header class="mb-9 p-4 bg-white shadow-[1px_0_2px_2px_rgb(0,0,0,0.25)] text-center rounded-xl relative">
+        <div class="overflow-x-auto"> 
+                <div class="flex flex-row justify-center">
+                    
+                 <h1 class="absolute left-5 text-lg  text-sky-800 font-bold">{{user.username}}</h1>
+                        
+                <h1 class="text-4xl text-sky-800 font-bold">VSI - Sales</h1>
+
+
+              
+                <div class="absolute right-5 flex flex-end">
+                    {# Admin Interface #}
+                    {% if is_superuser %}
+                        <a href="{% url 'admin:index' %}" 
+                        class="btn bnt-sm ml-4 font-bold shadow-[0_1px_0.5px_0.5px_rgb(0,0,0,0.1)] text-sky-900">Admin</a>
+                    {% endif %}
+
+                    {# Dashboard #}
+                    {% if menu_slug != "dashboard" %}
+                        <a href="{% url 'accounts:dashboard' %}" 
+                        class="btn bnt-sm ml-4 font-bold shadow-[0_1px_0.5px_0.5px_rgb(0,0,0,0.1)] text-sky-900">Dashboard</a>
+                    {% endif %}
+
+                    {# Sales #}
+                    {% if menu_slug == "dashboard" %}
+                        <a href="{% url 'sales:client_table' %}" 
+                        class="btn bnt-sm ml-4 font-bold shadow-[0_1px_0.5px_0.5px_rgb(0,0,0,0.1)] text-sky-900">Company Data</a>
+                    {% endif %}
+
+                    {# Log out #}
+                    <a href="{% url 'accounts:logout' %}" 
+                    class="btn bnt-sm ml-4 font-bold shadow-[0_1px_0.5px_0.5px_rgb(0,0,0,0.1)] text-sky-900">Logout </a>
+
+                </div>
+            </div>
+
+        {% block navbar %}
+        {% endblock navbar %}
+        </div>
+
+        <div>
+            {% block actions %}
+            {% endblock actions %}
+        </div>
+
+</header>
+{% endblock island_one %}

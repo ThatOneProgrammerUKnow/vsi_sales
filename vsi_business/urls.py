@@ -19,22 +19,19 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import RedirectView
 
-from apps.accounts.views import LoginView, SignupView, logout_view
-from apps.sales.views import OrderListView
-
 urlpatterns = [
     path("",
-        RedirectView.as_view(pattern_name="account_login"),
+        RedirectView.as_view(pattern_name="accounts:login"),
         name="root-redirect",
     ),
-    # Override allauth views
-    path("accounts/logout/", logout_view, name="account_logout"),
-    path("accounts/login/", LoginView.as_view(), name="account_login"),
-    path("accounts/signup/", SignupView.as_view(), name="account_signup"),
+    # Custom account views (override allauth)
+    path("accounts/", include("apps.accounts.urls")),
+    
+    # Allauth URLs (for password reset, etc.)
     path("accounts/", include("allauth.urls")),
     path(
         "admin/login/",
-        RedirectView.as_view(pattern_name="account_login"),
+        RedirectView.as_view(pattern_name="accounts:login"),
         name="redirect-to-login",
     ),
     path("admin/", admin.site.urls),
