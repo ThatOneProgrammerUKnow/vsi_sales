@@ -7,7 +7,7 @@ from django.db import models
 class Plan(BaseModel):
     name = models.CharField(max_length=50)
     max_orders_per_week = models.IntegerField(null = True, blank=True)
-    max_user = models.IntegerField(null=True, blank=True)
+    max_users = models.IntegerField(null=True, blank=True)
     price = models.DecimalField(max_digits=8, decimal_places=2, default=1)
 
     def __str__(self):
@@ -30,7 +30,7 @@ class Address(BaseModel):
     province = models.CharField(max_length=50, blank=True, null=True)
     postal_code = models.CharField(max_length=10, blank=True, null=True)
     country = models.CharField(max_length=50, blank=True, null=True, default="South Africa")
-    company = models.ForeignKey(Company, on_delete=models.PROTECT)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
 
 
     def __str__(self):
@@ -73,3 +73,9 @@ class User(AbstractUser):
         if not self.username:
             self.username = self.email
         super().save(*args, **kwargs)
+
+
+#====================================# Company Manager many2many Class #====================================#
+class CompanyManager(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)

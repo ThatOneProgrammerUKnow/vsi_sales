@@ -5,7 +5,7 @@ from apps.shared.base_views import BaseSessionViewMixin
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 
-from .models import Company
+from .models import Company, CompanyManager
 from .forms import CreateCompanyForm
 
 #=====# Generic Variables #=====#
@@ -56,6 +56,18 @@ class CreateCompanyView(BaseSessionViewMixin, CreateView):
     button_slug = "Create"
     success_url = reverse_lazy("accounts:dashboard")
     cancel_url = reverse_lazy("accounts:dashboard")
+
+    def form_valid(self, form):
+        response = super().form_valid(form) 
+
+        # Automatically making current user manager of company
+        CompanyManager.objects.create(
+            user = self.request.user,
+            company=self.object
+        )
+
+        return response
+
 
 
 #==================================================================# Dashboard #==================================================================#

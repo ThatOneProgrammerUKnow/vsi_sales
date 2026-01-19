@@ -386,7 +386,6 @@ class PreviewInvoiceView(BaseSessionViewMixin, DetailView):
 
         context["invoice_items"] = invoice_items
         context["company"] = self.request.user.company
-        context["company_address"] = self.request.user.company.address
         context["email"] = self.request.user.email
         return context
     
