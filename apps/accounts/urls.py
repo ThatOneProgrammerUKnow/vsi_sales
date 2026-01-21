@@ -19,6 +19,8 @@ urlpatterns = [
 
     #========================================================# Company #========================================================#  
     path('company/create', views.CreateCompanyView.as_view(), name='create_company'),
+    path('company/add_address/<int:company_id>', views.CompanyAddressView.as_view(), name='add_company_address'),
+    path('company/add_banking/<int:company_id>', views.CompanyBankingView.as_view(), name='add_company_banking'),
 
     #========================================================# Dashboard #========================================================#  
     path('dashboard/', views.DashboardView.as_view(), name='dashboard'),

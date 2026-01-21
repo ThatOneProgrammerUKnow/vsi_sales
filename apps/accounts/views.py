@@ -2,11 +2,11 @@ from allauth.account import views as allauth_views
 from django.contrib.auth import logout
 from django.views.generic import CreateView, TemplateView
 from apps.shared.base_views import BaseSessionViewMixin
-from django.shortcuts import redirect
-from django.urls import reverse_lazy
+from django.shortcuts import redirect, get_object_or_404
+from django.urls import reverse_lazy, reverse
 
-from .models import Company, CompanyManager
-from .forms import CreateCompanyForm
+from .models import Company, CompanyManager, Address, BankDetails
+from .forms import CreateCompanyForm, CompanyAddressForm, CompanyBankingForm
 
 #=====# Generic Variables #=====#
 generic_form = "generic/generic_form.html"
@@ -48,17 +48,27 @@ class ConfirmEmailView(allauth_views.ConfirmEmailView):
     template_name = "apps/accounts/email_confirm.html"
 
 #==================================================================# Company #==================================================================#
+#=====# General #=====#
 class CreateCompanyView(BaseSessionViewMixin, CreateView):
     model = Company
     form_class = CreateCompanyForm
     template_name = generic_form
     title_slug = "Create Company"
     button_slug = "Create"
-    success_url = reverse_lazy("accounts:dashboard")
     cancel_url = reverse_lazy("accounts:dashboard")
-
+    
+    
     def form_valid(self, form):
         response = super().form_valid(form) 
+        print(f"\nCreating company:")
+        print(f"name={self.object.name}")
+        print(f"owner={self.request.user.username}\n")
+        
+        # Assigning user to the company
+        user = self.request.user
+        user.company = self.object
+        user.save()
+        
 
         # Automatically making current user manager of company
         CompanyManager.objects.create(
@@ -66,7 +76,73 @@ class CreateCompanyView(BaseSessionViewMixin, CreateView):
             company=self.object
         )
 
+
         return response
+
+    def get_success_url(self):
+        return reverse(
+            "accounts:add_company_address",
+            kwargs={"company_id": self.object.id}
+        )
+    
+  
+
+
+#=====# Address #=====#
+class CompanyAddressView(BaseSessionViewMixin, CreateView):
+    model = Address
+    form_class = CompanyAddressForm
+    template_name = generic_form
+    title_slug = "Add Company Address"
+    button_slug = "Add Address"
+    button2_slug = "Skip Address"
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        company = get_object_or_404(Company, id=self.kwargs['company_id'])
+        context['company'] = company
+
+        context['cancel_url'] = reverse("accounts:add_company_banking", kwargs={"company_id" : self.kwargs["company_id"]})
+
+        return context
+
+    def form_valid(self, form):
+        company = get_object_or_404(Company, id=self.kwargs['company_id'])
+        form.instance.company = company
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse(
+            'accounts:add_company_banking', 
+            kwargs={'company_id': self.kwargs['company_id']}
+            )
+
+
+#=====# Banking #=====#
+class CompanyBankingView(BaseSessionViewMixin, CreateView):
+    model = BankDetails
+    form_class = CompanyBankingForm
+    template_name = generic_form
+    title_slug = "Add Company Banking Details"
+    button_slug = "Add Banking Details"
+    button2_slug = "Skip Banking"
+    cancel_url = reverse_lazy("accounts:dashboard")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        company = get_object_or_404(Company, id=self.kwargs['company_id'])
+        context['company'] = company
+        
+        return context
+
+    def form_valid(self, form):
+        company = get_object_or_404(Company, id=self.kwargs['company_id'])
+        form.instance.company = company
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy("accounts:dashboard")
 
 
 
@@ -74,6 +150,16 @@ class CreateCompanyView(BaseSessionViewMixin, CreateView):
 class DashboardView(BaseSessionViewMixin, TemplateView):
     template_name = "apps/accounts/dashboard.html"
     menu_slug = "dashboard"
+
+    def get_context_data(self):
+        context = super().get_context_data()
+
+        user = self.request.user
+        context["manager"] = CompanyManager.objects.filter(user=user, company=user.company).exists
+
+        return context
+
+
 
 #==================================================================# Function based views #==================================================================#
 def logout_view(request):
