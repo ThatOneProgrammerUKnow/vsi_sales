@@ -5,7 +5,7 @@ from apps.shared.base_views import BaseSessionViewMixin
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 
-from .models import Company, CompanyManager, Address, BankDetails
+from .models import Company, CompanyManager, Address, BankDetails, JoinRequest
 from .forms import CreateCompanyForm, CompanyAddressForm, CompanyBankingForm
 
 #=====# Generic Variables #=====#
@@ -48,6 +48,10 @@ class ConfirmEmailView(allauth_views.ConfirmEmailView):
     template_name = "apps/accounts/email_confirm.html"
 
 #==================================================================# Company #==================================================================#
+#====================# Join company #====================#
+
+
+#====================# Create company #====================#
 #=====# General #=====#
 class CreateCompanyView(BaseSessionViewMixin, CreateView):
     model = Company
@@ -155,7 +159,7 @@ class DashboardView(BaseSessionViewMixin, TemplateView):
         context = super().get_context_data()
 
         user = self.request.user
-        context["manager"] = CompanyManager.objects.filter(user=user, company=user.company).exists
+        context["manager"] = CompanyManager.objects.filter(user=user, company=user.company).exists # Is the user a manager? Boolean
 
         return context
 
