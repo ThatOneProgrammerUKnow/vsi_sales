@@ -13,12 +13,12 @@
         </a>
         {% elif manager %}
         <a href="" class="btn btn-sm btn-primary m-5  mb-1">
-            Company
-        </a>
-        <a href="" class="btn btn-sm btn-primary m-5  mb-1">
             Company information
         </a>
         <a href="" class="btn btn-sm btn-primary m-5  mb-1">
+            Staff
+        </a>
+        <a href="{% url 'accounts:join_requests' %}" class="btn btn-sm btn-primary m-5  mb-1">
             Join Requests
         </a>
         {% endif %}

@@ -12,6 +12,8 @@ class BaseSessionViewMixin:
     button2_slug = ""
     skip_button = ""
 
+    app_name = ""
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -21,6 +23,8 @@ class BaseSessionViewMixin:
         context["heading2_slug"] = self.heading2_slug
         context["button_slug"] = self.button_slug
         context["button2_slug"] = self.button2_slug
+
+        context["app_name"] = self.app_name
 
         # Urls
         context["cancel_url"] = self.cancel_url

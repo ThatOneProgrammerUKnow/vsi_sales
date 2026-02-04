@@ -30,6 +30,11 @@ from playwright.sync_api import sync_playwright
 #=====# Generic Variables #=====#
 generic_form = "generic/generic_form.html"
 confirm_delete = "generic/confirm_delete.html"
+
+#==================================================================# Custom View Mixins #==================================================================# 
+class BaseSessionViewMixin(BaseSessionViewMixin):
+    app_name = "sales"
+
 #===============================================================# Tables #===============================================================#
 #--->>> Client table
 class ClientListView(BaseSessionViewMixin, SingleTableView):
