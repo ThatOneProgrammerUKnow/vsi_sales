@@ -6,7 +6,7 @@ from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 
 from .models import Company, CompanyManager, Address, BankDetails, JoinRequest
-from .forms import CreateCompanyForm, CompanyAddressForm, CompanyBankingForm
+from .forms import CreateCompanyForm, CompanyAddressForm, CompanyBankingForm, JoinCompany
 
 #=====# Generic Variables #=====#
 generic_form = "generic/generic_form.html"
@@ -49,6 +49,20 @@ class ConfirmEmailView(allauth_views.ConfirmEmailView):
 
 #==================================================================# Company #==================================================================#
 #====================# Join company #====================#
+class JoinCompany(BaseSessionViewMixin, CreateView): # Creates "Joinrequest" object
+    model = JoinRequest
+    form_class = JoinCompany
+    template_name = generic_form
+    title_slug = "Join Company"
+    button_slug = "Request to join"
+    cancel_url = reverse_lazy("accounts:dashboard")
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse_lazy("accounts:dashboard")
 
 
 #====================# Create company #====================#

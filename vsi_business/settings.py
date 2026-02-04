@@ -51,7 +51,8 @@ THIRD_PARTY_APPS = [
     "allauth.account",
     "django_celery_beat",
     "django_tables2",
-    "phonenumber_field"
+    "phonenumber_field",
+    "django_select2",
 ]
 
 INSTALLED_APPS = (
