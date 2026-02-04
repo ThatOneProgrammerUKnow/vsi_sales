@@ -1,0 +1,40 @@
+{% extends "page/session_header.html" %}
+
+{% block actions %} 
+<hr class="border-b-2 mb-3 mt-3">
+<div class="relative">
+    <h2 class="text-center text-3xl font-bold">Join Requests</h2>
+    <a class="btn btn-primary btn-sm absolute right-0 top-0" href="{% url 'accounts:dashboard' %}">Back</a>
+</div>
+{% endblock actions %}
+
+{% block content %}
+<div class="p-4 bg-white shadow-[1px_0_2px_2px_rgb(0,0,0,0.25)] text-center rounded-xl flex-1 min-w-{% firstof  as  %}">
+    <div class="overflow-x-scroll">
+        {# The list #}
+        <table class="w-full">
+            <thead>
+                <tr>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Surname</th>
+                    <th class="text-center">Email</th>
+                    <th class="text-center">Approve</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in joinrequests %}
+                <tr>
+                    <td>{{r.user.username}}</td>
+                    <td>{{r.user.surname}}</td>
+                    <td>{{r.user.email}}</td>
+                    <td class="text-center">
+                        <a href="#" class="text-green-600 text-xl font-bold">✓</a>
+                        <a href="#" class="text-red-600 text-xl font-bold ml-3">✕</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock content %}

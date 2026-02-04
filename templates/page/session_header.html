@@ -6,9 +6,10 @@
         <div class="overflow-x-auto"> 
                 <div class="flex flex-row justify-center">
                     
-                 <h1 class="absolute left-5 text-lg  text-sky-800 font-bold">{{user.username}}</h1>
+                 <a class="absolute left-5 btn btn-sm shadow-[0_1px_0.5px_0.5px_rgb(0,0,0,0.1)] text-sky-900
+                 ">{{ user.username }}</a>
                         
-                <h1 class="text-4xl text-sky-800 font-bold">VSI - Sales</h1>
+                <h1 class="text-4xl text-sky-800 font-bold ">VSI - Sales</h1>
 
 
               
@@ -19,14 +20,14 @@
                         class="btn bnt-sm ml-4 font-bold shadow-[0_1px_0.5px_0.5px_rgb(0,0,0,0.1)] text-sky-900">Admin</a>
                     {% endif %}
 
-                    {# Dashboard #}
-                    {% if menu_slug != "dashboard" %}
+                    {# Dashboard | Only show if the user is not in the accounts app #}
+                    {% if app_name != "accounts" %}
                         <a href="{% url 'accounts:dashboard' %}" 
                         class="btn bnt-sm ml-4 font-bold shadow-[0_1px_0.5px_0.5px_rgb(0,0,0,0.1)] text-sky-900">Dashboard</a>
                     {% endif %}
 
-                    {# Sales #}
-                    {% if menu_slug == "dashboard" %}
+                    {# Sales | Only show if the user is not in the sales app #}
+                    {% if app_name != "sales" %}
                         <a href="{% url 'sales:client_table' %}" 
                         class="btn bnt-sm ml-4 font-bold shadow-[0_1px_0.5px_0.5px_rgb(0,0,0,0.1)] text-sky-900">Company Data</a>
                     {% endif %}

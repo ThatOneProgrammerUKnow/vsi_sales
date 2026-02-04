@@ -24,6 +24,10 @@ urlpatterns = [
 
     #========================================================# Dashboard #========================================================#  
     path('dashboard/', views.DashboardView.as_view(), name='dashboard'),
+    path('dashboard/join_company', views.JoinCompany.as_view(), name='join_company'),
+
+    #=====# Actions #=====#
+    path('dashboard/join_requests/', views.JoinRequestView.as_view(), name='join_requests'),
 
     
 ]

@@ -1,20 +1,25 @@
 from allauth.account import views as allauth_views
 from django.contrib.auth import logout
-from django.views.generic import CreateView, TemplateView
+from django.views.generic import CreateView, TemplateView, ListView
 from apps.shared.base_views import BaseSessionViewMixin
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 
-from .models import Company, CompanyManager, Address, BankDetails
-from .forms import CreateCompanyForm, CompanyAddressForm, CompanyBankingForm
+from .models import Company, CompanyManager, Address, BankDetails, JoinRequest
+from .forms import CreateCompanyForm, CompanyAddressForm, CompanyBankingForm, JoinCompany
 
 #=====# Generic Variables #=====#
 generic_form = "generic/generic_form.html"
 confirm_delete = "generic/confirm_delete.html"
 
+#==================================================================# Custom View Mixins #==================================================================# 
+class BaseSessionViewMixin(BaseSessionViewMixin):
+    app_name = "accounts"
+
+
 #==================================================================# User #==================================================================# 
 class LoginView(allauth_views.LoginView):
-    template_name = "apps/accounts/login.html"
+    template_name = "apps/accounts/Authorization/login.html"
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -22,7 +27,7 @@ class LoginView(allauth_views.LoginView):
         return context
 
 class SignupView(allauth_views.SignupView):
-    template_name = "apps/accounts/signup.html"
+    template_name = "apps/accounts/Authorization/signup.html"
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -30,24 +35,45 @@ class SignupView(allauth_views.SignupView):
         return context
 
 class PasswordResetView(allauth_views.PasswordResetView):
-    template_name = "apps/accounts/password_reset.html"
+    template_name = "apps/accounts/Authorization/password_reset.html"
 
 class PasswordResetDoneView(allauth_views.PasswordResetDoneView):
-    template_name = "apps/accounts/password_reset_done.html"
+    template_name = "apps/accounts/Authorization/password_reset_done.html"
 
 class PasswordResetFromKeyView(allauth_views.PasswordResetFromKeyView):
-    template_name = "apps/accounts/password_reset_from_key.html"
+    template_name = "apps/accounts/Authorization/password_reset_from_key.html"
 
 class PasswordResetFromKeyDoneView(allauth_views.PasswordResetFromKeyDoneView):
-    template_name = "apps/accounts/password_reset_from_key_done.html"
+    template_name = "apps/accounts/Authorization/password_reset_from_key_done.html"
 
 class EmailVerificationSentView(allauth_views.EmailVerificationSentView):
-    template_name = "apps/accounts/verification_sent.html"
+    template_name = "apps/accounts/Authorization/verification_sent.html"
 
 class ConfirmEmailView(allauth_views.ConfirmEmailView):
-    template_name = "apps/accounts/email_confirm.html"
+    template_name = "apps/accounts/Authorization/email_confirm.html"
 
-#==================================================================# Company #==================================================================#
+#==================================================================# Create views #==================================================================#
+#====================# Join company #====================#
+'''
+Creates "joinrequest" object with fields "company" and "user"
+'''
+class JoinCompany(BaseSessionViewMixin, CreateView): # Creates "Joinrequest" object
+    model = JoinRequest
+    form_class = JoinCompany
+    template_name = generic_form
+    title_slug = "Join Company"
+    button_slug = "Request to join"
+    cancel_url = reverse_lazy("accounts:dashboard")
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse_lazy("accounts:dashboard")
+
+
+#====================# Create company #====================#
 #=====# General #=====#
 class CreateCompanyView(BaseSessionViewMixin, CreateView):
     model = Company
@@ -84,9 +110,6 @@ class CreateCompanyView(BaseSessionViewMixin, CreateView):
             "accounts:add_company_address",
             kwargs={"company_id": self.object.id}
         )
-    
-  
-
 
 #=====# Address #=====#
 class CompanyAddressView(BaseSessionViewMixin, CreateView):
@@ -118,7 +141,6 @@ class CompanyAddressView(BaseSessionViewMixin, CreateView):
             kwargs={'company_id': self.kwargs['company_id']}
             )
 
-
 #=====# Banking #=====#
 class CompanyBankingView(BaseSessionViewMixin, CreateView):
     model = BankDetails
@@ -146,7 +168,12 @@ class CompanyBankingView(BaseSessionViewMixin, CreateView):
 
 
 
-#==================================================================# Dashboard #==================================================================#
+#==================================================================# Template or list views  #==================================================================#
+#====================# Template views #====================#
+# Dashboard
+'''
+Send "manager" context to the template
+'''
 class DashboardView(BaseSessionViewMixin, TemplateView):
     template_name = "apps/accounts/dashboard.html"
     menu_slug = "dashboard"
@@ -155,11 +182,27 @@ class DashboardView(BaseSessionViewMixin, TemplateView):
         context = super().get_context_data()
 
         user = self.request.user
-        context["manager"] = CompanyManager.objects.filter(user=user, company=user.company).exists
+        context["manager"] = CompanyManager.objects.filter(user=user, company=user.company).exists # Is the user a manager? Boolean
 
         return context
+    
+#====================# List views #====================#
+# Company information
+
+# Staff
+
+# Join requests
+class JoinRequestView(BaseSessionViewMixin, ListView):
+    model = JoinRequest
+    template_name = "apps/accounts/join_requests.html"
+    menu_slug = "join_requests"
+    context_object_name = "joinrequests"
 
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(company=self.request.user.company)
+    
 
 #==================================================================# Function based views #==================================================================#
 def logout_view(request):

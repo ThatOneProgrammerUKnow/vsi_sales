@@ -79,3 +79,14 @@ class User(AbstractUser):
 class CompanyManager(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.user} | {self.company}"
+    
+#====================================# Join requests many2many Class #====================================#
+class JoinRequest(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.user} | {self.company}"

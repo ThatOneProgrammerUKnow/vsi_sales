@@ -38,4 +38,7 @@ urlpatterns = [
 
     path("sales/", include("apps.sales.urls")),
 
+    # Third party
+    path("select2/", include("django_select2.urls")),
+
 ]
