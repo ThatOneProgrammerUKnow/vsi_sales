@@ -80,6 +80,9 @@ class CompanyManager(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
 
+    class Meta:
+        unique_together = ("user", "company")
+
     def __str__(self):
         return f"{self.user} | {self.company}"
     
@@ -87,6 +90,9 @@ class CompanyManager(models.Model):
 class JoinRequest(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ("user", "company")
 
     def __str__(self):
         return f"{self.user} | {self.company}"
