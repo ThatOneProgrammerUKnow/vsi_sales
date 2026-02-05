@@ -22,12 +22,17 @@ urlpatterns = [
     path('company/add_address/<int:company_id>', views.CompanyAddressView.as_view(), name='add_company_address'),
     path('company/add_banking/<int:company_id>', views.CompanyBankingView.as_view(), name='add_company_banking'),
 
+    #=====# Joining company #=====#
+    path('company/join_company', views.JoinCompany.as_view(), name='join_company'), # Join company | Creates JoinRequest object
+    path('company/join_requests/', views.JoinRequestView.as_view(), name='join_requests'), # View join request objects
+    path('company/join/approve/<int:pk>/', views.ApproveJoinRequestView.as_view(), name='approve_join_request'), # Approve Request
+    path('company/join/deny/<int:pk>/', views.DenyJoinRequestView.as_view(), name='deny_join_request'), # Deny Request
+
     #========================================================# Dashboard #========================================================#  
     path('dashboard/', views.DashboardView.as_view(), name='dashboard'),
-    path('dashboard/join_company', views.JoinCompany.as_view(), name='join_company'),
+    
 
-    #=====# Actions #=====#
-    path('dashboard/join_requests/', views.JoinRequestView.as_view(), name='join_requests'),
+    
 
     
 ]

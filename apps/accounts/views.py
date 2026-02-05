@@ -1,9 +1,11 @@
 from allauth.account import views as allauth_views
 from django.contrib.auth import logout
-from django.views.generic import CreateView, TemplateView, ListView
+from django.views.generic import CreateView, TemplateView, ListView, View
 from apps.shared.base_views import BaseSessionViewMixin
+
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
+from django.http import HttpResponseForbidden
 
 from .models import Company, CompanyManager, Address, BankDetails, JoinRequest
 from .forms import CreateCompanyForm, CompanyAddressForm, CompanyBankingForm, JoinCompany
@@ -11,6 +13,13 @@ from .forms import CreateCompanyForm, CompanyAddressForm, CompanyBankingForm, Jo
 #=====# Generic Variables #=====#
 generic_form = "generic/generic_form.html"
 confirm_delete = "generic/confirm_delete.html"
+
+#=====# Console tools #=====#
+RED = "\033[31m"
+CYAN = "\033[36m]"
+RESET = "\033[0m"
+
+ERROR_COLOR = RED
 
 #==================================================================# Custom View Mixins #==================================================================# 
 class BaseSessionViewMixin(BaseSessionViewMixin):
@@ -52,7 +61,7 @@ class EmailVerificationSentView(allauth_views.EmailVerificationSentView):
 class ConfirmEmailView(allauth_views.ConfirmEmailView):
     template_name = "apps/accounts/Authorization/email_confirm.html"
 
-#==================================================================# Create views #==================================================================#
+#==================================================================# Company #==================================================================#
 #====================# Join company #====================#
 '''
 Creates "joinrequest" object with fields "company" and "user"
@@ -71,6 +80,61 @@ class JoinCompany(BaseSessionViewMixin, CreateView): # Creates "Joinrequest" obj
     
     def get_success_url(self):
         return reverse_lazy("accounts:dashboard")
+
+#====================# Join requests | List view #====================#
+class JoinRequestView(BaseSessionViewMixin, ListView):
+    model = JoinRequest
+    template_name = "apps/accounts/join_requests.html"
+    menu_slug = "join_requests"
+    context_object_name = "joinrequests"
+
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(company=self.request.user.company)
+    
+#====================# Approve/Deny request #====================#
+class ApproveJoinRequestView(BaseSessionViewMixin, View):
+    def post(self, request, pk):
+        join_request = get_object_or_404(JoinRequest, pk=pk)
+
+        # Security
+        managers = CompanyManager.objects.filter(company=join_request.company)
+        m_users = []
+        for m in managers: m_users.append(m.user)
+
+        if request.user not in m_users:
+            return HttpResponseForbidden("You are not a manager. Acces denied")
+        
+        # Add user to company
+        user = join_request.user
+        user.company = join_request.company
+        user.save()
+
+        join_request.delete()
+
+        return redirect("accounts:join_requests")
+    
+class DenyJoinRequestView(BaseSessionViewMixin, View):
+    def post(self, request, pk):
+        join_request = get_object_or_404(JoinRequest, pk=pk)
+
+        # Security
+        managers = CompanyManager.objects.filter(company=join_request.company)
+        m_users = []
+        for m in managers: m_users.append(m.user)
+
+        if request.user not in m_users:
+            return HttpResponseForbidden("You are not a manager. Acces denied")
+        
+
+        join_request.delete()
+
+        return redirect("accounts:dashboard")
+
+
+
+
 
 
 #====================# Create company #====================#
@@ -168,7 +232,7 @@ class CompanyBankingView(BaseSessionViewMixin, CreateView):
 
 
 
-#==================================================================# Template or list views  #==================================================================#
+#==================================================================# Template #==================================================================#
 #====================# Template views #====================#
 # Dashboard
 '''
@@ -191,17 +255,7 @@ class DashboardView(BaseSessionViewMixin, TemplateView):
 
 # Staff
 
-# Join requests
-class JoinRequestView(BaseSessionViewMixin, ListView):
-    model = JoinRequest
-    template_name = "apps/accounts/join_requests.html"
-    menu_slug = "join_requests"
-    context_object_name = "joinrequests"
 
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        return queryset.filter(company=self.request.user.company)
     
 
 #==================================================================# Function based views #==================================================================#

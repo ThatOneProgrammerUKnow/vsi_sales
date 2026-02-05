@@ -27,9 +27,17 @@
                     <td>{{r.user.username}}</td>
                     <td>{{r.user.surname}}</td>
                     <td>{{r.user.email}}</td>
-                    <td class="text-center">
-                        <a href="#" class="text-green-600 text-xl font-bold">✓</a>
-                        <a href="#" class="text-red-600 text-xl font-bold ml-3">✕</a>
+                    <td class="flex justify-center">
+                        {# Approve join request #}
+                        <form method="post" action="{% url 'accounts:approve_join_request' r.id %}">
+                            {% csrf_token %}
+                            <button class="text-green-600 text-xl font-bold hover:cursor-pointer">✓</button>
+                        </form>
+                        {# Deny join request #}
+                        <form method="post" action="{% url 'accounts:deny_join_request' r.id %}">
+                            {% csrf_token %}
+                            <button class="text-red-600 text-xl font-bold ml-3 hover:cursor-pointer">✕</button>
+                        </form>
                     </td>
                 </tr>
                 {% endfor %}
