@@ -8,6 +8,7 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('login/', views.LoginView.as_view(), name='login'),
     path('signup/', views.SignupView.as_view(), name='signup'),
+    path('personal_information/', views.PersonalInformation.as_view(), name='personal_information'),
 
     #=====# Django Authentication #=====# 
     path('password/reset/', views.PasswordResetView.as_view(), name='account_reset_password'),

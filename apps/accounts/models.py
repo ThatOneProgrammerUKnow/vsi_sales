@@ -61,9 +61,7 @@ class User(AbstractUser):
     ]
 
     identification_number = models.CharField(max_length=13, blank=True, null=True)
-    uuid = models.UUIDField(
-        default=uuid.uuid4, editable=False, unique=True, db_index=True
-    )
+    uuid = models.UUIDField( default=uuid.uuid4, editable=False, unique=True, db_index=True )
     email = models.EmailField("email address", unique=True)
 
     # Other

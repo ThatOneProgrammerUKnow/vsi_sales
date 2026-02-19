@@ -1,14 +1,14 @@
 from allauth.account import views as allauth_views
 from django.contrib.auth import logout
-from django.views.generic import CreateView, TemplateView, ListView, View
+from django.views.generic import CreateView, TemplateView, ListView, View, UpdateView
 from apps.shared.base_views import BaseSessionViewMixin
 
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseForbidden
 
-from .models import Company, CompanyManager, Address, BankDetails, JoinRequest
-from .forms import CreateCompanyForm, CompanyAddressForm, CompanyBankingForm, JoinCompany
+from .models import Company, CompanyManager, Address, BankDetails, JoinRequest, User
+from .forms import CreateCompanyForm, CompanyAddressForm, CompanyBankingForm, JoinCompanyForm, PersonalInformationForm
 
 #=====# Generic Variables #=====#
 generic_form = "generic/generic_form.html"
@@ -37,11 +37,6 @@ class LoginView(allauth_views.LoginView):
 
 class SignupView(allauth_views.SignupView):
     template_name = "apps/accounts/Authorization/signup.html"
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        
-        return context
 
 class PasswordResetView(allauth_views.PasswordResetView):
     template_name = "apps/accounts/Authorization/password_reset.html"
@@ -61,6 +56,24 @@ class EmailVerificationSentView(allauth_views.EmailVerificationSentView):
 class ConfirmEmailView(allauth_views.ConfirmEmailView):
     template_name = "apps/accounts/Authorization/email_confirm.html"
 
+#==================================================================# User #==================================================================#
+#====================# Personal Information #====================#
+class PersonalInformation(BaseSessionViewMixin, UpdateView):
+    model = User
+    form_class = PersonalInformationForm
+    template_name = generic_form
+    title_slug = "PersonalInformation"
+    button_slug = "Save Changes"
+    cancel_url = reverse_lazy("accounts:dashboard")
+    button2_slug = "Back"
+
+    def get_object(self):
+        return self.request.user
+
+    def get_success_url(self):
+        return reverse_lazy("accounts:dashboard")
+
+
 #==================================================================# Company #==================================================================#
 #====================# Join company #====================#
 '''
@@ -68,7 +81,7 @@ Creates "joinrequest" object with fields "company" and "user"
 '''
 class JoinCompany(BaseSessionViewMixin, CreateView): # Creates "Joinrequest" object
     model = JoinRequest
-    form_class = JoinCompany
+    form_class = JoinCompanyForm
     template_name = generic_form
     title_slug = "Join Company"
     button_slug = "Request to join"
@@ -246,7 +259,7 @@ class DashboardView(BaseSessionViewMixin, TemplateView):
         context = super().get_context_data()
 
         user = self.request.user
-        context["manager"] = CompanyManager.objects.filter(user=user, company=user.company).exists # Is the user a manager? Boolean
+        context["manager"] = CompanyManager.objects.filter(user=user, company=user.company).exists() # Is the user a manager? Boolean
 
         return context
     
