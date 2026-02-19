@@ -10,7 +10,7 @@
                  <a href="{% url 'accounts:personal_information'%}" class="absolute left-5 btn btn-sm shadow-[0_1px_0.5px_0.5px_rgb(0,0,0,0.1)] text-sky-900
                  ">{{ user.username }}</a>
                         
-                <h1 class="text-4xl text-sky-800 font-bold ">VSI - Sales</h1>
+                <h1 class="text-4xl text-sky-800 font-bold ">{%if user.company%}{{ user.company }} - {%endif%} {{ page_header }}</h1>
 
 
               
@@ -29,7 +29,7 @@
 
                     {# Sales | Only show if the user is not in the sales app #}
                     {% if app_name != "sales" %}
-                        <a href="{% url 'sales:client_table' %}" 
+                        <a href="{% url 'sales:company_data' %}" 
                         class="btn bnt-sm ml-4 font-bold shadow-[0_1px_0.5px_0.5px_rgb(0,0,0,0.1)] text-sky-900">Company Data</a>
                     {% endif %}
 

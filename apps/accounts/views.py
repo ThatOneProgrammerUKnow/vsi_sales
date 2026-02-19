@@ -24,6 +24,7 @@ ERROR_COLOR = RED
 #==================================================================# Custom View Mixins #==================================================================# 
 class BaseSessionViewMixin(BaseSessionViewMixin):
     app_name = "accounts"
+    page_header = "Dashboard"
 
 
 #==================================================================# User #==================================================================# 
@@ -62,7 +63,7 @@ class PersonalInformation(BaseSessionViewMixin, UpdateView):
     model = User
     form_class = PersonalInformationForm
     template_name = generic_form
-    title_slug = "PersonalInformation"
+    title_slug = "Personal Information"
     button_slug = "Save Changes"
     cancel_url = reverse_lazy("accounts:dashboard")
     button2_slug = "Back"
@@ -144,13 +145,9 @@ class DenyJoinRequestView(BaseSessionViewMixin, View):
         join_request.delete()
 
         return redirect("accounts:dashboard")
+#====================# Company #====================#
 
-
-
-
-
-
-#====================# Create company #====================#
+#==========# Create #==========#
 #=====# General #=====#
 class CreateCompanyView(BaseSessionViewMixin, CreateView):
     model = Company
@@ -220,6 +217,8 @@ class CompanyAddressView(BaseSessionViewMixin, CreateView):
 
 #=====# Banking #=====#
 class CompanyBankingView(BaseSessionViewMixin, CreateView):
+
+
     model = BankDetails
     form_class = CompanyBankingForm
     template_name = generic_form
@@ -243,7 +242,7 @@ class CompanyBankingView(BaseSessionViewMixin, CreateView):
     def get_success_url(self):
         return reverse_lazy("accounts:dashboard")
 
-
+#==========# Update #==========#
 
 #==================================================================# Template #==================================================================#
 #====================# Template views #====================#

@@ -1,6 +1,6 @@
 #===================================# Django Imports #===================================#
 from django.shortcuts import redirect, get_object_or_404
-from django.views.generic import DeleteView, DetailView
+from django.views.generic import DeleteView, DetailView, TemplateView
 from django.urls import reverse_lazy, reverse
 from django.views import View
 from django_tables2 import SingleTableView
@@ -34,6 +34,16 @@ confirm_delete = "generic/confirm_delete.html"
 #==================================================================# Custom View Mixins #==================================================================# 
 class BaseSessionViewMixin(BaseSessionViewMixin):
     app_name = "sales"
+    page_header = "Sales"
+
+#===============================================================# Templates #===============================================================#
+class CompanyDataView(BaseSessionViewMixin, TemplateView):
+    template_name = "page/session_navbar.html"
+
+    def get(self, request, *args, **kwargs):
+        if not request.user.company:
+            return redirect(reverse_lazy("accounts:dashboard"))
+        return super().get(request, *args, **kwargs)
 
 #===============================================================# Tables #===============================================================#
 #--->>> Client table
