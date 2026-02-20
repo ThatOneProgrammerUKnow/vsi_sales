@@ -18,7 +18,11 @@ urlpatterns = [
     path('confirm-email/', views.EmailVerificationSentView.as_view(), name='account_email_verification_sent'),
     path('confirm-email/<key>/', views.ConfirmEmailView.as_view(), name='account_confirm_email'),
 
-    #========================================================# Company #======================================================== 
+    #========================================================# Company #========================================================#
+    #===============# Staff #===============#
+    #=====# List #=====#
+    path('company/staff/list', views.StaffListView.as_view(), name='list_staff'),
+
     #===============# Create #===============#
     path('company/create', views.CreateCompanyView.as_view(), name='create_company'),
     path('company/add_address/<int:company_id>', views.CompanyAddressView.as_view(), name='add_company_address'),

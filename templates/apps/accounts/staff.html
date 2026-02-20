@@ -3,9 +3,41 @@
 {% block actions %} 
 <hr class="border-b-2 mb-3 mt-3">
 <div class="relative">
-    <a class="btn btn-sm btn-primary absolute left-0" href="{% url 'accounts:dashboard' %}">Back</a>
-    <h2 class="text-center text-3xl font-bold">Staff</h2>
+    <h2 class="text-center text-3xl font-bold">All Staff</h2>
+    <a class="btn btn-primary btn-sm absolute right-0 top-0" href="{% url 'accounts:dashboard' %}">Back</a>
 </div>
-
-
 {% endblock actions %}
+
+{% block content %}
+<div class="p-4 bg-white shadow-[1px_0_2px_2px_rgb(0,0,0,0.25)] text-center rounded-xl flex-1 min-w-{% firstof  as  %}">
+    <div class="overflow-x-scroll">
+        {# The list #}
+        <table class="w-full">
+            <thead>
+                <tr>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Last Name</th>
+                    <th class="text-center">Email</th>
+                    <th class="text-center">ID</th>
+                    <th class="text-center">Role</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in staff %}
+                <tr>
+                    <td>{{m.username}}</td>
+                    <td>{{m.last_name}}</td>
+                    <td>{{m.email}}</td>
+                    <td>{{m.identification_number}}</td>
+
+
+                    <td class="flex justify-center">
+                        <a class="btn btn-sm font-medium">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock content %}

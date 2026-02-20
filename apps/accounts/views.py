@@ -58,7 +58,7 @@ class ConfirmEmailView(allauth_views.ConfirmEmailView):
     template_name = "apps/accounts/Authorization/email_confirm.html"
 
 #==================================================================# User #==================================================================#
-#====================# Personal Information #====================#
+#==============================# Personal Information #==============================#
 class PersonalInformation(BaseSessionViewMixin, UpdateView):
     model = User
     form_class = PersonalInformationForm
@@ -76,7 +76,7 @@ class PersonalInformation(BaseSessionViewMixin, UpdateView):
 
 
 #==================================================================# Company #==================================================================#
-#====================# Join company #====================#
+#========================================# Join company #========================================#
 '''
 Creates "joinrequest" object with fields "company" and "user"
 '''
@@ -95,7 +95,7 @@ class JoinCompany(BaseSessionViewMixin, CreateView): # Creates "Joinrequest" obj
     def get_success_url(self):
         return reverse_lazy("accounts:dashboard")
 
-#====================# Join requests | List view #====================#
+#=====# Join requests | List view #=====#
 class JoinRequestView(BaseSessionViewMixin, ListView):
     model = JoinRequest
     template_name = "apps/accounts/join_requests.html"
@@ -107,7 +107,7 @@ class JoinRequestView(BaseSessionViewMixin, ListView):
         queryset = super().get_queryset()
         return queryset.filter(company=self.request.user.company)
     
-#====================# Approve/Deny request #====================#
+#=====# Approve/Deny request #=====#
 class ApproveJoinRequestView(BaseSessionViewMixin, View):
     def post(self, request, pk):
         join_request = get_object_or_404(JoinRequest, pk=pk)
@@ -145,9 +145,23 @@ class DenyJoinRequestView(BaseSessionViewMixin, View):
         join_request.delete()
 
         return redirect("accounts:dashboard")
-#====================# Company #====================#
 
-#====================# Create #====================#
+#========================================# Staff related #========================================#
+class StaffListView(BaseSessionViewMixin, ListView):
+    model = User
+    template_name = "apps/accounts/staff.html"
+    menu_slug = "staff_list"
+    context_object_name = "staff"
+
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(company=self.request.user.company)
+    
+    
+
+#========================================# CRUD #========================================#
+#==============================# Create #==============================#
 #=====# General #=====#
 class CreateCompanyView(BaseSessionViewMixin, CreateView):
     model = Company
@@ -248,7 +262,7 @@ class CompanyBankingView(BaseSessionViewMixin, CreateView):
     def get_success_url(self):
         return reverse_lazy("accounts:dashboard")
 
-#====================# Update #====================#
+#==============================# Update #==============================#
 #=====# General #=====#
 class UpdateCompanyView(BaseSessionViewMixin, UpdateView):
     model = Company
@@ -364,7 +378,7 @@ class UpdateCompanyBankingView(BaseSessionViewMixin, UpdateView):
 
 
 #==================================================================# Template #==================================================================#
-#====================# Template views #====================#
+#==============================# Template views #==============================#
 # Dashboard
 '''
 Send "manager" context to the template
@@ -381,7 +395,7 @@ class DashboardView(BaseSessionViewMixin, TemplateView):
 
         return context
     
-#====================# List views #====================#
+#==============================# List views #==============================#
 # Company information
 
 # Staff
