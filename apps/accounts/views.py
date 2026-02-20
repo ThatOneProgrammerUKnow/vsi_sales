@@ -275,7 +275,7 @@ class UpdateCompanyView(BaseSessionViewMixin, UpdateView):
             )
         else:
             context["cancel_url"] = reverse(
-                "accounts:create_company_address",
+                "accounts:add_company_address",
                 kwargs={"company_id": company.id}
             )
         
@@ -301,7 +301,7 @@ class UpdateCompanyView(BaseSessionViewMixin, UpdateView):
                 )
         else: 
             return reverse(
-                    "accounts:create_company_address",
+                    "accounts:add_company_address",
                     kwargs={"company_id": company.id}
                 )
     
