@@ -1,11 +1,19 @@
 from django import forms
-from django.utils import timezone
-from .models import Company, Address, BankDetails, JoinRequest
+from .models import Company, Address, BankDetails, JoinRequest, User
 from django_select2.forms import ModelSelect2Widget
 
-from django.contrib.auth import get_user_model
 
 
+#==================================================================# User #==================================================================#
+#======================# Personal information #======================#
+class PersonalInformationForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name", "username", "email", "identification_number"]
+
+        help_texts = {
+            "username" : ""
+        }
 
 #==================================================================# Company #==================================================================#
 #======================# Create company #======================#
@@ -14,6 +22,7 @@ class CreateCompanyForm(forms.ModelForm):
     class Meta:
         model = Company
         fields = ["name", "plan"]
+
     
 #======================# Company address #======================#    
 class CompanyAddressForm(forms.ModelForm):
@@ -39,7 +48,7 @@ class CompanyBankingForm(forms.ModelForm):
         self.fields['branch_name'].required = False
 
 #======================# Join company #======================#
-class JoinCompany(forms.ModelForm):
+class JoinCompanyForm(forms.ModelForm):
     company = forms.ModelChoiceField(
         queryset=Company.objects.all(),
         widget=ModelSelect2Widget(

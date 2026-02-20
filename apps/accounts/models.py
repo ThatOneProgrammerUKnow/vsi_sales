@@ -13,15 +13,6 @@ class Plan(BaseModel):
     def __str__(self):
         return f"{self.name} - R {self.price}"
 
-#====================================#  Company #====================================#
-class Company(BaseModel):
-    name = models.CharField(max_length=255)
-    plan = models.ForeignKey(Plan, on_delete=models.CASCADE, blank=True, null=True)
-    subscription_expires_at = models.DateField(null=True, blank=True)
-
-    def __str__(self):
-        return self.name
- 
 #====================================# Adress #====================================#
 class Address(BaseModel):
     street = models.CharField(max_length=50, blank=True, null=True)  # street number + name
@@ -30,7 +21,6 @@ class Address(BaseModel):
     province = models.CharField(max_length=50, blank=True, null=True)
     postal_code = models.CharField(max_length=10, blank=True, null=True)
     country = models.CharField(max_length=50, blank=True, null=True, default="South Africa")
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
 
 
     def __str__(self):
@@ -41,7 +31,6 @@ class Address(BaseModel):
         return address
 #====================================# Banking Details #====================================#
 class BankDetails(models.Model):
-    company = models.OneToOneField('Company', on_delete=models.CASCADE, related_name='bank_details')
     bank_name = models.CharField(max_length=100, blank=True, null=True)
     branch_name = models.CharField(max_length=100, blank=True, null=True)
     branch_code = models.CharField(max_length=20, blank=True, null=True)
@@ -50,6 +39,17 @@ class BankDetails(models.Model):
     def __str__(self):
         return f"{self.bank_name} - {self.account_number}"
 
+#====================================#  Company #====================================#
+class Company(BaseModel):
+    name = models.CharField(max_length=255)
+    plan = models.ForeignKey(Plan, on_delete=models.CASCADE, blank=True, null=True)
+    subscription_expires_at = models.DateField(null=True, blank=True)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, blank=True, null=True)
+    bankdetails = models.ForeignKey(BankDetails, on_delete=models.CASCADE, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+ 
 
 #====================================# Custom User #====================================#
 class User(AbstractUser):
@@ -61,9 +61,7 @@ class User(AbstractUser):
     ]
 
     identification_number = models.CharField(max_length=13, blank=True, null=True)
-    uuid = models.UUIDField(
-        default=uuid.uuid4, editable=False, unique=True, db_index=True
-    )
+    uuid = models.UUIDField( default=uuid.uuid4, editable=False, unique=True, db_index=True )
     email = models.EmailField("email address", unique=True)
 
     # Other

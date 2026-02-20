@@ -4,6 +4,12 @@ from . import views
 app_name = "sales"
 
 urlpatterns = [
+
+    #=======================================# Template #=======================================#
+
+    path("company_data/", views.CompanyDataView.as_view(), name="company_data"),
+
+
     #=======================================# Clients #=======================================#
     path("clients/", views.ClientListView.as_view(), name="client_table"),
     path("clients/add", views.AddClientView.as_view(), name="add_client"),

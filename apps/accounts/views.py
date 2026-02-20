@@ -1,14 +1,14 @@
 from allauth.account import views as allauth_views
 from django.contrib.auth import logout
-from django.views.generic import CreateView, TemplateView, ListView, View
+from django.views.generic import CreateView, TemplateView, ListView, View, UpdateView
 from apps.shared.base_views import BaseSessionViewMixin
 
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseForbidden
 
-from .models import Company, CompanyManager, Address, BankDetails, JoinRequest
-from .forms import CreateCompanyForm, CompanyAddressForm, CompanyBankingForm, JoinCompany
+from .models import Company, CompanyManager, Address, BankDetails, JoinRequest, User
+from .forms import CreateCompanyForm, CompanyAddressForm, CompanyBankingForm, JoinCompanyForm, PersonalInformationForm
 
 #=====# Generic Variables #=====#
 generic_form = "generic/generic_form.html"
@@ -24,6 +24,7 @@ ERROR_COLOR = RED
 #==================================================================# Custom View Mixins #==================================================================# 
 class BaseSessionViewMixin(BaseSessionViewMixin):
     app_name = "accounts"
+    page_header = "Dashboard"
 
 
 #==================================================================# User #==================================================================# 
@@ -37,11 +38,6 @@ class LoginView(allauth_views.LoginView):
 
 class SignupView(allauth_views.SignupView):
     template_name = "apps/accounts/Authorization/signup.html"
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        
-        return context
 
 class PasswordResetView(allauth_views.PasswordResetView):
     template_name = "apps/accounts/Authorization/password_reset.html"
@@ -61,6 +57,24 @@ class EmailVerificationSentView(allauth_views.EmailVerificationSentView):
 class ConfirmEmailView(allauth_views.ConfirmEmailView):
     template_name = "apps/accounts/Authorization/email_confirm.html"
 
+#==================================================================# User #==================================================================#
+#====================# Personal Information #====================#
+class PersonalInformation(BaseSessionViewMixin, UpdateView):
+    model = User
+    form_class = PersonalInformationForm
+    template_name = generic_form
+    title_slug = "Personal Information"
+    button_slug = "Save Changes"
+    cancel_url = reverse_lazy("accounts:dashboard")
+    button2_slug = "Back"
+
+    def get_object(self):
+        return self.request.user
+
+    def get_success_url(self):
+        return reverse_lazy("accounts:dashboard")
+
+
 #==================================================================# Company #==================================================================#
 #====================# Join company #====================#
 '''
@@ -68,7 +82,7 @@ Creates "joinrequest" object with fields "company" and "user"
 '''
 class JoinCompany(BaseSessionViewMixin, CreateView): # Creates "Joinrequest" object
     model = JoinRequest
-    form_class = JoinCompany
+    form_class = JoinCompanyForm
     template_name = generic_form
     title_slug = "Join Company"
     button_slug = "Request to join"
@@ -131,13 +145,9 @@ class DenyJoinRequestView(BaseSessionViewMixin, View):
         join_request.delete()
 
         return redirect("accounts:dashboard")
+#====================# Company #====================#
 
-
-
-
-
-
-#====================# Create company #====================#
+#====================# Create #====================#
 #=====# General #=====#
 class CreateCompanyView(BaseSessionViewMixin, CreateView):
     model = Company
@@ -147,7 +157,7 @@ class CreateCompanyView(BaseSessionViewMixin, CreateView):
     button_slug = "Create"
     cancel_url = reverse_lazy("accounts:dashboard")
     
-    
+    # Printing details to console
     def form_valid(self, form):
         response = super().form_valid(form) 
         print(f"\nCreating company:")
@@ -168,7 +178,7 @@ class CreateCompanyView(BaseSessionViewMixin, CreateView):
 
 
         return response
-
+    # Send company id to next view
     def get_success_url(self):
         return reverse(
             "accounts:add_company_address",
@@ -182,7 +192,7 @@ class CompanyAddressView(BaseSessionViewMixin, CreateView):
     template_name = generic_form
     title_slug = "Add Company Address"
     button_slug = "Add Address"
-    button2_slug = "Skip Address"
+    button2_slug = "Don't add address"
 
 
     def get_context_data(self, **kwargs):
@@ -195,8 +205,11 @@ class CompanyAddressView(BaseSessionViewMixin, CreateView):
         return context
 
     def form_valid(self, form):
-        company = get_object_or_404(Company, id=self.kwargs['company_id'])
-        form.instance.company = company
+        address = form.save()
+        company = self.request.user.company
+        company.address = address
+        company.save()
+
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -207,12 +220,14 @@ class CompanyAddressView(BaseSessionViewMixin, CreateView):
 
 #=====# Banking #=====#
 class CompanyBankingView(BaseSessionViewMixin, CreateView):
+
+
     model = BankDetails
     form_class = CompanyBankingForm
     template_name = generic_form
     title_slug = "Add Company Banking Details"
     button_slug = "Add Banking Details"
-    button2_slug = "Skip Banking"
+    button2_slug = "Don't add banking details"
     cancel_url = reverse_lazy("accounts:dashboard")
 
     def get_context_data(self, **kwargs):
@@ -223,13 +238,129 @@ class CompanyBankingView(BaseSessionViewMixin, CreateView):
         return context
 
     def form_valid(self, form):
-        company = get_object_or_404(Company, id=self.kwargs['company_id'])
-        form.instance.company = company
+        bankingdetails = form.save()
+        company = self.request.user.company
+        company.bankingdetails = bankingdetails
+        company.save()
+
         return super().form_valid(form)
 
     def get_success_url(self):
         return reverse_lazy("accounts:dashboard")
 
+#====================# Update #====================#
+#=====# General #=====#
+class UpdateCompanyView(BaseSessionViewMixin, UpdateView):
+    model = Company
+    form_class = CreateCompanyForm
+    template_name = generic_form
+    title_slug = "View and Update Company Information"
+    button_slug = "Save"
+    button2_slug = "Next"
+
+
+    # Getting object
+    def get_object(self, queryset=None):
+        return self.request.user.company
+    
+    # Obtaining correct cancel url
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        company = self.object 
+        if company.address:
+            context["cancel_url"] = reverse(
+                "accounts:update_company_address",
+                kwargs={"pk": company.address.id}
+            )
+        else:
+            context["cancel_url"] = reverse(
+                "accounts:create_company_address",
+                kwargs={"company_id": company.id}
+            )
+        
+        return context
+    
+
+    # Printing details to console
+    def form_valid(self, form):
+        response = super().form_valid(form) 
+        print(f"\nCreating company:")
+        print(f"name={self.object.name}")
+        print(f"owner={self.request.user.username}\n")
+        return response
+
+
+    # Send company id to next view
+    def get_success_url(self):
+        company = self.object
+        if company.address:
+            return reverse(
+                    "accounts:update_company_address",
+                    kwargs={"pk": company.address.id}
+                )
+        else: 
+            return reverse(
+                    "accounts:create_company_address",
+                    kwargs={"company_id": company.id}
+                )
+    
+#=====# Address #=====#
+class UpdateCompanyAddressView(BaseSessionViewMixin, UpdateView):
+    model = Address
+    form_class = CompanyAddressForm
+    template_name = generic_form
+    title_slug = "Update Company Address"
+    button_slug = "Save"
+    button2_slug = "Next"
+        
+
+    # Obtaining correct cancel url
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        company = self.request.user.company
+        if company.bankdetails:
+            context["cancel_url"] = reverse(
+                "accounts:update_company_banking",
+                kwargs={"pk": company.bankdetails.id}
+            )
+        else:
+            context["cancel_url"] = reverse(
+                "accounts:add_company_banking",
+                kwargs={"company_id": company.id}
+            )
+        
+        return context
+        
+    
+    def get_success_url(self):
+        company = self.request.user.company 
+
+        if company.bankdetails:
+            return reverse(
+                'accounts:update_company_banking', 
+                kwargs={'pk': company.bankdetails.id}
+                )
+        else:
+            return reverse(
+                'accounts:add_company_banking', 
+                kwargs={'company_id': company.id}
+                )
+
+#=====# Banking #=====#
+class UpdateCompanyBankingView(BaseSessionViewMixin, UpdateView):
+    model = BankDetails
+    form_class = CompanyBankingForm
+    template_name = generic_form
+    title_slug = "Add Company Banking Details"
+    button_slug = "Save"
+    button2_slug = "Back to Dashboard"
+    cancel_url = reverse_lazy("accounts:dashboard")
+
+
+    def get_success_url(self):
+        return reverse_lazy("accounts:dashboard")
 
 
 #==================================================================# Template #==================================================================#
@@ -246,7 +377,7 @@ class DashboardView(BaseSessionViewMixin, TemplateView):
         context = super().get_context_data()
 
         user = self.request.user
-        context["manager"] = CompanyManager.objects.filter(user=user, company=user.company).exists # Is the user a manager? Boolean
+        context["manager"] = CompanyManager.objects.filter(user=user, company=user.company).exists() # Is the user a manager? Boolean
 
         return context
     

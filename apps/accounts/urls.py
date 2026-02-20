@@ -8,6 +8,7 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('login/', views.LoginView.as_view(), name='login'),
     path('signup/', views.SignupView.as_view(), name='signup'),
+    path('personal_information/', views.PersonalInformation.as_view(), name='personal_information'),
 
     #=====# Django Authentication #=====# 
     path('password/reset/', views.PasswordResetView.as_view(), name='account_reset_password'),
@@ -17,22 +18,23 @@ urlpatterns = [
     path('confirm-email/', views.EmailVerificationSentView.as_view(), name='account_email_verification_sent'),
     path('confirm-email/<key>/', views.ConfirmEmailView.as_view(), name='account_confirm_email'),
 
-    #========================================================# Company #========================================================#  
+    #========================================================# Company #======================================================== 
+    #===============# Create #===============#
     path('company/create', views.CreateCompanyView.as_view(), name='create_company'),
     path('company/add_address/<int:company_id>', views.CompanyAddressView.as_view(), name='add_company_address'),
     path('company/add_banking/<int:company_id>', views.CompanyBankingView.as_view(), name='add_company_banking'),
+    
+    #===============# Update #===============#
+    path('company/update/', views.UpdateCompanyView.as_view(), name='update_company'),
+    path('company/update/<int:pk>/address', views.UpdateCompanyAddressView.as_view(), name='update_company_address'),
+    path('company/update/<int:pk>/banking_details', views.UpdateCompanyBankingView.as_view(), name='update_company_banking'),
 
-    #=====# Joining company #=====#
+    #===============# Joining company #=====#
     path('company/join_company', views.JoinCompany.as_view(), name='join_company'), # Join company | Creates JoinRequest object
     path('company/join_requests/', views.JoinRequestView.as_view(), name='join_requests'), # View join request objects
     path('company/join/approve/<int:pk>/', views.ApproveJoinRequestView.as_view(), name='approve_join_request'), # Approve Request
     path('company/join/deny/<int:pk>/', views.DenyJoinRequestView.as_view(), name='deny_join_request'), # Deny Request
 
     #========================================================# Dashboard #========================================================#  
-    path('dashboard/', views.DashboardView.as_view(), name='dashboard'),
-    
-
-    
-
-    
+    path('dashboard/', views.DashboardView.as_view(), name='dashboard'), 
 ]

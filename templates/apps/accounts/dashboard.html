@@ -2,7 +2,6 @@
 
 {% block actions %} 
 <hr class="border-b-2 mb-3 mt-3">
-    <h2 class="text-center text-3xl font-bold">Dashboard</h2>
     <section class="flex justify-center">
         {% if not user.company %}
         <a href="{% url 'accounts:create_company' %}" class="btn btn-sm btn-primary m-5 mb-1">
@@ -12,7 +11,7 @@
             Join Company
         </a>
         {% elif manager %}
-        <a href="" class="btn btn-sm btn-primary m-5  mb-1">
+        <a href="{% url 'accounts:update_company'%}" class="btn btn-sm btn-primary m-5  mb-1">
             Company information
         </a>
         <a href="" class="btn btn-sm btn-primary m-5  mb-1">
